@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remote People - CS Success Plays 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --border: #E2E5EA;
+    --border-light: #EEF0F3;
+    --text-primary: #1A1D23;
+    --text-secondary: #5A6170;
+    --text-muted: #8B91A0;
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-border: #BFDBFE;
+    --green: #059669;
+    --green-light: #ECFDF5;
+    --green-border: #A7F3D0;
+    --yellow: #D97706;
+    --yellow-light: #FFFBEB;
+    --yellow-border: #FDE68A;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --red-border: #FECACA;
+    --purple: #7C3AED;
+    --purple-light: #F5F3FF;
+    --purple-border: #DDD6FE;
+    --orange: #EA580C;
+    --orange-light: #FFF7ED;
+    --orange-border: #FED7AA;
+    --teal: #0D9488;
+    --teal-light: #F0FDFA;
+    --teal-border: #99F6E4;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.65;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- LAYOUT ---- */
+  .page-wrapper {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ---- SIDEBAR NAV ---- */
+  .sidebar {
+    width: 280px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    padding: 24px 0;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-logo h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+
+  .sidebar-logo span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    padding: 16px 20px 6px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+    background: var(--bg);
+  }
+
+  .nav-link.active {
+    color: var(--blue);
+    background: var(--blue-light);
+    border-left-color: var(--blue);
+    font-weight: 600;
+  }
+
+  .nav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ---- MAIN CONTENT ---- */
+  .main-content {
+    margin-left: 280px;
+    flex: 1;
+    padding: 32px 48px 80px;
+    max-width: 900px;
+  }
+
+  /* ---- HEADER ---- */
+  .page-header {
+    margin-bottom: 40px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  .page-header .subtitle {
+    color: var(--text-secondary);
+    font-size: 15px;
+  }
+
+  .last-updated {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    background: var(--bg);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-top: 12px;
+  }
+
+  /* ---- SECTIONS ---- */
+  .section {
+    display: none;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- CARDS ---- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .card h2 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-top: 20px;
+    color: var(--text-primary);
+  }
+
+  .card h3:first-child { margin-top: 0; }
+
+  .card p {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .card ul, .card ol {
+    margin: 8px 0 12px 20px;
+    color: var(--text-secondary);
+  }
+
+  .card li {
+    margin-bottom: 6px;
+    padding-left: 4px;
+  }
+
+  .card li strong {
+    color: var(--text-primary);
+  }
+
+  /* ---- CALLOUT BOXES ---- */
+  .callout {
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 14px;
+    border-left: 4px solid;
+  }
+
+  .callout-trigger {
+    background: var(--blue-light);
+    border-color: var(--blue);
+  }
+
+  .callout-trigger .callout-label { color: var(--blue); }
+
+  .callout-risk {
+    background: var(--red-light);
+    border-color: var(--red);
+  }
+
+  .callout-risk .callout-label { color: var(--red); }
+
+  .callout-tip {
+    background: var(--green-light);
+    border-color: var(--green);
+  }
+
+  .callout-tip .callout-label { color: var(--green); }
+
+  .callout-warn {
+    background: var(--yellow-light);
+    border-color: var(--yellow);
+  }
+
+  .callout-warn .callout-label { color: var(--yellow); }
+
+  .callout-label {
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+  }
+
+  .callout-body {
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  /* ---- TABLES ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13.5px;
+  }
+
+  th {
+    background: var(--bg);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+
+  td strong { color: var(--text-primary); }
+
+  tr:last-child td { border-bottom: none; }
+
+  /* ---- TAGS ---- */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-green { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .tag-yellow { background: var(--yellow-light); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .tag-red { background: var(--red-light); color: var(--red); border: 1px solid var(--red-border); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+  .tag-orange { background: var(--orange-light); color: var(--orange); border: 1px solid var(--orange-border); }
+  .tag-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+
+  /* ---- MESSAGING TEMPLATE ---- */
+  .msg-template {
+    background: #FAFBFC;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 12px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    position: relative;
+  }
+
+  .msg-template::before {
+    content: 'TEMPLATE';
+    position: absolute;
+    top: -9px;
+    left: 14px;
+    background: #FAFBFC;
+    padding: 0 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+  }
+
+  .msg-channel {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  /* ---- PERSONA CARDS ---- */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  .persona-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    background: var(--surface);
+  }
+
+  .persona-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .persona-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+
+  .persona-card ul {
+    margin: 0 0 0 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .persona-card li { margin-bottom: 3px; }
+
+  /* ---- PLAY HEADER ---- */
+  .play-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .play-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    height: 1px;
+    background: var(--border-light);
+    margin: 24px 0;
+  }
+
+  /* ---- COPY BUTTON ---- */
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .copy-btn:hover {
+    color: var(--blue);
+    border-color: var(--blue-border);
+  }
+
+  .msg-template { position: relative; }
+
+  /* ---- PRODUCT BADGE ---- */
+  .product-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+
+  /* ---- MOBILE ---- */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main-content { margin-left: 0; padding: 20px; }
+    .persona-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<!-- ======== SIDEBAR ======== -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h2>Remote People</h2>
+    <span>CS Success Plays 2026</span>
+  </div>
+
+  <div class="nav-section-label">Reference</div>
+  <a class="nav-link active" onclick="showSection('overview')">
+    <span class="nav-dot" style="background: var(--blue)"></span> How to Use This
+  </a>
+  <a class="nav-link" onclick="showSection('personas')">
+    <span class="nav-dot" style="background: var(--purple)"></span> Persona Mapping
+  </a>
+
+  <div class="nav-section-label">Growth Plays</div>
+  <a class="nav-link" onclick="showSection('play-green')">
+    <span class="nav-dot" style="background: var(--green)"></span> Health = Green
+  </a>
+  <a class="nav-link" onclick="showSection('play-expansion')">
+    <span class="nav-dot" style="background: var(--teal)"></span> Expansion Signals
+  </a>
+  <a class="nav-link" onclick="showSection('play-hiring')">
+    <span class="nav-dot" style="background: var(--blue)"></span> Open Roles Detected
+  </a>
+  <a class="nav-link" onclick="showSection('play-funding')">
+    <span class="nav-dot" style="background: var(--purple)"></span> Funding / Market News
+  </a>
+  <a class="nav-link" onclick="showSection('play-multi-country')">
+    <span class="nav-dot" style="background: var(--teal)"></span> Multi-Country Growth
+  </a>
+  <a class="nav-link" onclick="showSection('play-referral')">
+    <span class="nav-dot" style="background: var(--green)"></span> Referral Ask
+  </a>
+
+  <div class="nav-section-label">Risk Plays</div>
+  <a class="nav-link" onclick="showSection('play-yellow')">
+    <span class="nav-dot" style="background: var(--yellow)"></span> Health = Yellow
+  </a>
+  <a class="nav-link" onclick="showSection('play-red')">
+    <span class="nav-dot" style="background: var(--red)"></span> Health = Red
+  </a>
+  <a class="nav-link" onclick="showSection('play-poc')">
+    <span class="nav-dot" style="background: var(--orange)"></span> POC Change
+  </a>
+  <a class="nav-link" onclick="showSection('play-tickets')">
+    <span class="nav-dot" style="background: var(--orange)"></span> Support Ticket Trends
+  </a>
+  <a class="nav-link" onclick="showSection('play-entity')">
+    <span class="nav-dot" style="background: var(--red)"></span> Entity Setup Risk
+  </a>
+
+  <div class="nav-section-label">Lifecycle Plays</div>
+  <a class="nav-link" onclick="showSection('play-backfill')">
+    <span class="nav-dot" style="background: var(--yellow)"></span> Backfill / Offboarding
+  </a>
+  <a class="nav-link" onclick="showSection('play-hiring-trends')">
+    <span class="nav-dot" style="background: var(--blue)"></span> Hiring Trends
+  </a>
+  <a class="nav-link" onclick="showSection('play-qbr')">
+    <span class="nav-dot" style="background: var(--blue)"></span> Schedule QBR
+  </a>
+  <a class="nav-link" onclick="showSection('play-holidays')">
+    <span class="nav-dot" style="background: var(--purple)"></span> Holidays / Occasions
+  </a>
+
+  <div class="nav-section-label">Products & Offers</div>
+  <a class="nav-link" onclick="showSection('product-annual')">
+    <span class="nav-dot" style="background: var(--green)"></span> Annual Upfronts
+  </a>
+  <a class="nav-link" onclick="showSection('product-recruitment')">
+    <span class="nav-dot" style="background: var(--blue)"></span> Recruitment Services
+  </a>
+  <a class="nav-link" onclick="showSection('product-suite')">
+    <span class="nav-dot" style="background: var(--purple)"></span> Full Product Suite
+  </a>
+</nav>
+
+<!-- ======== MAIN CONTENT ======== -->
+<div class="main-content">
+
+<!-- ==================== OVERVIEW ==================== -->
+<div class="section active" id="overview">
+  <div class="page-header">
+    <h1>CS Success Plays</h1>
+    <p class="subtitle">Trigger-based playbook for growth, retention, and lifecycle management</p>
+    <div class="last-updated">Updated: March 2026</div>
+  </div>
+
+  <div class="card">
+    <h2>How This Works</h2>
+    <p>Each play is built around a <strong>trigger</strong> -- a signal that something is changing in a customer's business, team, or strategy. When you spot a trigger, run the play.</p>
+
+    <table>
+      <tr><th>Element</th><th>What It Tells You</th></tr>
+      <tr><td><strong>Trigger</strong></td><td>The signal that activates the play. What you see in HubSpot, LinkedIn, tickets, or conversation.</td></tr>
+      <tr><td><strong>Opportunity</strong></td><td>What you can gain by acting: expansion, retention, advocacy, deeper relationship.</td></tr>
+      <tr><td><strong>Risk</strong></td><td>What you lose by not acting: churn, revenue loss, competitor foothold.</td></tr>
+      <tr><td><strong>Actions</strong></td><td>Step-by-step. What to do, in what order, and who to involve.</td></tr>
+      <tr><td><strong>Messaging</strong></td><td>Copy-paste templates you can personalize. Tested language that works.</td></tr>
+      <tr><td><strong>Channel</strong></td><td>Where to reach out: email, call, LinkedIn, QBR, or a combination.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Quick Reference: Play Categories</h2>
+    <table>
+      <tr><th>Category</th><th>Plays</th><th>Goal</th></tr>
+      <tr><td><span class="tag tag-green">GROWTH</span></td><td>Green Health, Expansion Signals, Open Roles, Funding/News, Multi-Country, Referrals</td><td>Drive expansion revenue and advocacy</td></tr>
+      <tr><td><span class="tag tag-red">RISK</span></td><td>Yellow Health, Red Health, POC Change, Ticket Trends, Entity Setup</td><td>Prevent churn, rebuild trust, stabilize accounts</td></tr>
+      <tr><td><span class="tag tag-blue">LIFECYCLE</span></td><td>Backfill, Hiring Trends, QBR Scheduling, Holidays</td><td>Stay proactive through natural account milestones</td></tr>
+      <tr><td><span class="tag tag-purple">PRODUCTS</span></td><td>Annual Upfronts, Recruitment Services, Full Suite</td><td>Cross-sell and deepen product adoption</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== PERSONAS ==================== -->
+<div class="section" id="personas">
+  <div class="page-header">
+    <h1>Persona Mapping</h1>
+    <p class="subtitle">Tailor your outreach, messaging, and collateral based on who you're engaging</p>
+  </div>
+
+  <div class="persona-grid">
+    <div class="persona-card">
+      <h4>CEO</h4>
+      <div class="persona-section-label">Cares About</div>
+      <ul>
+        <li>Speed to market, global expansion</li>
+        <li>Minimizing risk while growing</li>
+        <li>Reducing operational costs and CAC</li>
+      </ul>
+      <div class="persona-section-label">Pain Points</div>
+      <ul>
+        <li>Complexity of entity setup</li>
+        <li>High cost and time entering new markets</li>
+        <li>Compliance risks impacting revenue/brand</li>
+      </ul>
+      <div class="persona-section-label">Our Value</div>
+      <ul>
+        <li>Fast market entry without entity setup</li>
+        <li>Compliance liability eliminated</li>
+        <li>Access to talent in 150+ countries</li>
+      </ul>
+    </div>
+
+    <div class="persona-card">
+      <h4>CFO</h4>
+      <div class="persona-section-label">Cares About</div>
+      <ul>
+        <li>Cost control and predictability</li>
+        <li>Reducing financial risk</li>
+        <li>Compliance across jurisdictions</li>
+      </ul>
+      <div class="persona-section-label">Pain Points</div>
+      <ul>
+        <li>Hidden costs in misclassification penalties</li>
+        <li>High EOR costs relative to value</li>
+        <li>Time managing global payroll and benefits</li>
+      </ul>
+      <div class="persona-section-label">Our Value</div>
+      <ul>
+        <li>No hidden fees, no setup fees</li>
+        <li>Competitive pricing, annual options</li>
+        <li>Consolidated invoicing, reduced overhead</li>
+      </ul>
+    </div>
+
+    <div class="persona-card">
+      <h4>CHRO / HR Lead</h4>
+      <div class="persona-section-label">Cares About</div>
+      <ul>
+        <li>Global workforce agility</li>
+        <li>Attracting and retaining talent</li>
+        <li>Compliance and employee experience</li>
+      </ul>
+      <div class="persona-section-label">Pain Points</div>
+      <ul>
+        <li>Compliance struggles in unfamiliar jurisdictions</li>
+        <li>Onboarding delays damaging candidate experience</li>
+        <li>Difficulty offering competitive, localized benefits</li>
+      </ul>
+      <div class="persona-section-label">Our Value</div>
+      <ul>
+        <li>Compliant hiring in 150+ countries</li>
+        <li>Fast onboarding experience</li>
+        <li>Localized benefits packages</li>
+      </ul>
+    </div>
+
+    <div class="persona-card">
+      <h4>VP of People</h4>
+      <div class="persona-section-label">Cares About</div>
+      <ul>
+        <li>Seamless employee experience</li>
+        <li>Enabling business units to scale quickly</li>
+        <li>Simplifying HR operations globally</li>
+      </ul>
+      <div class="persona-section-label">Pain Points</div>
+      <ul>
+        <li>HR teams stretched thin across countries</li>
+        <li>Poor EE experience from lack of local support</li>
+        <li>Constant labor law changes hard to track</li>
+      </ul>
+      <div class="persona-section-label">Our Value</div>
+      <ul>
+        <li>True partner for global people ops</li>
+        <li>Consistent HR support for remote hires</li>
+        <li>Compliant with ever-changing regulations</li>
+      </ul>
+    </div>
+
+    <div class="persona-card">
+      <h4>VP of Sales / CRO</h4>
+      <div class="persona-section-label">Cares About</div>
+      <ul>
+        <li>Selling into new markets fast</li>
+        <li>Building local presence</li>
+        <li>Reducing customer acquisition costs</li>
+      </ul>
+      <div class="persona-section-label">Pain Points</div>
+      <ul>
+        <li>Sales blocked by lack of local presence</li>
+        <li>Non-compliance risk hiring reps abroad</li>
+        <li>Missing out on global talent pool</li>
+      </ul>
+      <div class="persona-section-label">Our Value</div>
+      <ul>
+        <li>Hire sales reps anywhere, legally and quickly</li>
+        <li>Reduced operational costs</li>
+        <li>Access to talent in 150+ countries</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: GREEN HEALTH ==================== -->
+<div class="section" id="play-green">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--green-light); color: var(--green);">G1</div>
+      <div>
+        <h1>Customer Health = Green</h1>
+        <p class="subtitle">Growth &amp; Advocacy</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer health score is Green. Account is stable, engaged, and satisfied.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <ul>
+      <li>Reinforce value and satisfaction before complacency sets in</li>
+      <li>Explore upsell or expansion opportunities (new countries, products)</li>
+      <li>Capture advocacy: testimonials, case studies, referrals</li>
+    </ul>
+
+    <h3>Risk</h3>
+    <ul>
+      <li>Green does not mean "forever" -- value may be fragile if not actively reinforced</li>
+      <li>Quiet champions may change roles without notice (see POC Change play)</li>
+      <li>Competitor outreach targets satisfied accounts who are not being proactively engaged</li>
+    </ul>
+
+    <h3>Actions</h3>
+    <ol>
+      <li><strong>Celebrate recent wins</strong> -- acknowledge milestones, headcount growth, or successful onboardings</li>
+      <li><strong>Explore what's next</strong> -- new markets, new features, deeper adoption. Ask about their roadmap.</li>
+      <li><strong>Ask for advocacy</strong> -- testimonials, case studies, or referrals if timing is right</li>
+      <li><strong>Keep them informed</strong> -- share relevant country/market insights, new product updates</li>
+      <li><strong>Schedule QBR</strong> or monthly check-in to maintain cadence</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Hi [Customer Name],<br><br>
+      Loving the momentum your team has right now -- thanks for being such a strong partner.<br><br>
+      Even though things are going well, I'd love the chance to connect and discuss some untapped potential around savings, growth, and possible new markets. I also want to realign on goals. Promise it will be worth your time.<br><br>
+      When's your next available 30 mins?<br><br>
+      Alternatively, my calendar [HERE] is updated -- feel free to book a time that works best.
+    </div>
+    <div class="msg-channel">Channel: Email or Video Call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: EXPANSION SIGNALS ==================== -->
+<div class="section" id="play-expansion">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--teal-light); color: var(--teal);">G2</div>
+      <div>
+        <h1>Expansion Signals</h1>
+        <p class="subtitle">EEs with other vendors / consolidation opportunity</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer has EEs managed by another vendor, or you learn they're using multiple EOR providers across regions.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <ul>
+      <li>Consolidate EEs under one vendor for simplification of global workforce management</li>
+      <li>Reduce client admin overhead and improve consistency</li>
+      <li>Increase revenue per account</li>
+    </ul>
+
+    <h3>Risk</h3>
+    <ul>
+      <li>Lose EEs to competitor if they consolidate away from us</li>
+      <li>Client may not see the value of switching providers for existing EEs</li>
+    </ul>
+
+    <h3>Actions</h3>
+    <ol>
+      <li><strong>Inquire about their full global hiring setup</strong> -- don't assume you know all vendors involved</li>
+      <li><strong>Ask about contractors</strong> -- are they part of the mix? Misclassification risk is a lever</li>
+      <li><strong>Position consolidation as simplification</strong> -- one partner, one invoice, one compliance layer</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Templates</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      I'd love to get a better sense of your global hiring setup. Are you currently working with multiple vendors or handling things region by region?<br><br>
+      Are contractors part of your mix, or are you mostly focused on full-time employees?<br><br>
+      It could be worth exploring whether there's an opportunity to simplify things under one partner to reduce admin and improve consistency. Would you be open to that?
+    </div>
+    <div class="msg-channel">Channel: Check-in / Monthly / QBR Call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: OPEN ROLES ==================== -->
+<div class="section" id="play-hiring">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--blue-light); color: var(--blue);">G3</div>
+      <div>
+        <h1>Open Roles Detected</h1>
+        <p class="subtitle">LinkedIn job postings open 15+ days</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer has open roles on LinkedIn for 15+ days -- either US-based or global.</div>
+  </div>
+
+  <div class="card">
+    <h3>Scenario A: US-Based Hiring</h3>
+
+    <div class="callout callout-tip">
+      <div class="callout-label">Opportunity</div>
+      <div class="callout-body">Start a conversation about global expansion. Position Remote People as a partner to scale hiring efforts globally and optimize costs and compliance.</div>
+    </div>
+
+    <div class="callout callout-risk">
+      <div class="callout-label">Risk</div>
+      <div class="callout-body">Customer may grow solely in the US with a local entity, missing global talent pools and cost savings.</div>
+    </div>
+
+    <p><strong>Action:</strong> Reach out to explore whether the customer is open to accessing global talent to reduce hiring costs and time-to-hire.</p>
+
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Hi [Customer Name],<br><br>
+      I wanted to reach out and see how your hiring efforts are progressing.<br><br>
+      I noticed you announced [Job opening in the US] a little over 2 weeks ago and wanted to offer support -- whether with candidate sourcing or, if you're considering expanding your search globally, I can recommend a few countries that could fill the requirement.
+    </div>
+    <div class="msg-channel">Channel: Email or LinkedIn Message, then follow-up call</div>
+  </div>
+
+  <div class="card">
+    <h3>Scenario B: Global Hiring</h3>
+
+    <div class="callout callout-tip">
+      <div class="callout-label">Opportunity</div>
+      <div class="callout-body">Engage immediately to support compliance, speed, and cost-effectiveness in international hiring.</div>
+    </div>
+
+    <div class="callout callout-risk">
+      <div class="callout-label">Risk</div>
+      <div class="callout-body">Customer may be using another EOR or engaging talent in non-compliant ways (e.g., contractors where employment is more appropriate).</div>
+    </div>
+
+    <p><strong>Action:</strong> Watch for international job postings. Research internally to confirm if Remote People is involved. If not, explore why and how you can help.</p>
+
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Hi [Customer Name],<br><br>
+      I wanted to reach out and see how your global hiring efforts are progressing.<br><br>
+      I noticed you recently announced [Job opening in country/countries] about 2 weeks ago and wanted to offer my support.<br><br>
+      We'd be happy to provide a shortlist of top [role] candidates in [countries] if it helps.
+    </div>
+    <div class="msg-channel">Channel: Email or LinkedIn Message, then follow-up call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: FUNDING / MARKET NEWS ==================== -->
+<div class="section" id="play-funding">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--purple-light); color: var(--purple);">G4</div>
+      <div>
+        <h1>Funding / Market News</h1>
+        <p class="subtitle">Seed to Series A (max 18 months) or competitive landscape shifts</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer announces funding round (Seed to Series A), or relevant market/competitor news surfaces that affects their hiring strategy.</div>
+  </div>
+
+  <div class="card">
+    <h3>Funding Round</h3>
+    <p><strong>Opportunity:</strong> Seed and Series A rounds are typically used to grow teams and tech. Budget is unlocked.</p>
+    <p><strong>Action:</strong> Research funding news. Congratulate and explore hiring plans.</p>
+
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Hi [Customer Name],<br><br>
+      Huge congrats on the recent funding round -- exciting times for your team!<br><br>
+      I know this usually brings added workload too, so I'm happy to help if continuing international expansion is a strategic move for this next stage.<br><br>
+      Happy to recommend a few countries that are gaining popularity as well.
+    </div>
+    <div class="msg-channel">Channel: Email, then Check-in / QBR call</div>
+
+    <div class="divider"></div>
+
+    <h3>Market / Competitive News</h3>
+    <p><strong>Opportunity:</strong> Position yourself as a strategic advisor who's watching the market on their behalf.</p>
+    <p><strong>Action:</strong> Share relevant insights or updates and connect them to the client's hiring strategy.</p>
+
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      I saw [news article or competitor movement] and immediately thought of your team. Have you considered how this could impact your hiring plans or global footprint?
+    </div>
+    <div class="msg-channel">Channel: Email, then follow-up call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: MULTI-COUNTRY ==================== -->
+<div class="section" id="play-multi-country">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--teal-light); color: var(--teal);">G5</div>
+      <div>
+        <h1>Multi-Country Growth</h1>
+        <p class="subtitle">Active EEs in multiple countries</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer has active EEs in multiple countries. They're already global -- now it's about expanding the footprint.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <ul>
+      <li>Expand footprint into countries they're active in but not partnering with us</li>
+      <li>Simplify management -- EOR is clearly a key piece of their business strategy</li>
+      <li>Use success in one country to suggest "copy-paste" strategy in similar markets</li>
+    </ul>
+
+    <h3>Risk</h3>
+    <ul>
+      <li>Increased EE density in one country could signal future entity setup (Rule of 5)</li>
+      <li>They may be working with competitors in countries we don't know about</li>
+    </ul>
+
+    <h3>Actions</h3>
+    <ol>
+      <li>Ask about countries not currently managed by Remote People</li>
+      <li>Explore countries they'd like to break into</li>
+      <li>Share insights on similar hiring markets (e.g., "Customers hiring in Mexico often also succeed in Colombia or Argentina")</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Templates</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      I noticed we're supporting your team in [X, Y, Z countries]. Curious -- are there other markets where you're active but not currently partnering with us?
+    </div>
+
+    <div class="msg-template" style="margin-top: 16px;">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Your team's growth in [Country] has been great to watch -- it's a clear signal you're doing something right!<br><br>
+      Given your current growth, have you considered replicating the approach in other regions? There are a few countries where we can help you access similar talent profiles with lower cost and reduced employer burden. Happy to share some recommendations.<br><br>
+      Would you be open to exploring what that might look like?
+    </div>
+    <div class="msg-channel">Channel: Check-in / QBR call or Email</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: REFERRAL ==================== -->
+<div class="section" id="play-referral">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--green-light); color: var(--green);">G6</div>
+      <div>
+        <h1>Referral Ask</h1>
+        <p class="subtitle">Leverage strong relationships for warm introductions</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer is referral-ready: Green health, recent success, NPS promoter, post-QBR momentum, or recent expansion.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <ul>
+      <li>Expand pipeline through warm introductions</li>
+      <li>Build customer advocacy and long-term loyalty</li>
+      <li>Higher quality prospects who already trust the referrer</li>
+    </ul>
+
+    <h3>Risk</h3>
+    <ul>
+      <li>Waiting too long and missing the momentum of customer satisfaction</li>
+      <li>Asking too early (before value is felt) weakens the relationship</li>
+      <li>Referrals go to competitors if you don't ask</li>
+    </ul>
+
+    <h3>Actions</h3>
+    <ol>
+      <li>Identify referral-ready customers (Green health, recent success, NPS promoters, post-QBR moments, expansions)</li>
+      <li>Ask during moments of high value or gratitude</li>
+      <li>Make the ask specific, low-effort, and personalized</li>
+      <li>Follow up with gratitude, status updates, and appreciation</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Hi [Customer Name],<br><br>
+      I've really enjoyed seeing how your team has grown in [country/countries]. Your journey is a great example of how global hiring can work when done right.<br><br>
+      We've been growing our team to enable a wider range of global services, and I'm starting to speak with others just beginning to explore international hiring.<br><br>
+      If there's anyone in your network who's curious about how to scale globally, your endorsement would carry significant weight, and I would be grateful for any referrals you could provide.<br><br>
+      As a thank you, we'd be happy to offer you 10% off one month of service fees (max $1,500) once your referral makes their first hire. But more than anything, we just appreciate your support.<br><br>
+      Thanks for being such a thoughtful partner.
+    </div>
+    <div class="msg-channel">Channel: Email or Call</div>
+
+    <div class="callout callout-tip" style="margin-top: 16px;">
+      <div class="callout-label">Referral Incentive</div>
+      <div class="callout-body">10% off one month of service fees (max $1,500) once the referral makes their first hire.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: YELLOW HEALTH ==================== -->
+<div class="section" id="play-yellow">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--yellow-light); color: var(--yellow);">R1</div>
+      <div>
+        <h1>Customer Health = Yellow</h1>
+        <p class="subtitle">Risk &amp; Retention</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer health score is Yellow. Momentum is slowing, engagement may be dipping, or unresolved friction is building.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <ul>
+      <li>Prevent risk from becoming critical</li>
+      <li>Deepen the relationship with proactive support</li>
+      <li>Uncover blockers early and demonstrate value</li>
+    </ul>
+
+    <h3>Risk</h3>
+    <ul>
+      <li>Customer is unsure of long-term fit</li>
+      <li>Momentum is slowing, leading to possible disengagement</li>
+      <li>One bad experience could tip the balance toward churn</li>
+    </ul>
+
+    <h3>Actions</h3>
+    <ol>
+      <li><strong>Schedule a check-in</strong> to explore friction points</li>
+      <li><strong>Reiterate goals</strong> and share a tailored optimization plan</li>
+      <li><strong>Highlight quick wins</strong> and recent value delivered</li>
+      <li><strong>Ask for feedback</strong> to address hesitations early</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Hi [Customer Name],<br><br>
+      How are you? I noticed a few things that might be slowing us down, and I want to make sure we're staying ahead of your goals.<br><br>
+      Would love to connect and talk through how things are going and how we can best support you in the weeks ahead.<br><br>
+      When's your next available 30 mins?<br><br>
+      Alternatively, my calendar [HERE] is updated -- feel free to book a time that works best.
+    </div>
+    <div class="msg-channel">Channel: Email, then Video Call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: RED HEALTH ==================== -->
+<div class="section" id="play-red">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--red-light); color: var(--red);">R2</div>
+      <div>
+        <h1>Customer Health = Red</h1>
+        <p class="subtitle">Critical risk -- act now</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-risk">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer health score is Red. Churn is imminent if action isn't taken immediately.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <ul>
+      <li>Rebuild trust and realign quickly before churn</li>
+      <li>Identify root causes and implement a turnaround plan</li>
+      <li>Demonstrate accountability and high-touch support</li>
+    </ul>
+
+    <h3>Risk</h3>
+    <ul>
+      <li>Churn is imminent if action isn't taken</li>
+      <li>Customer may be evaluating competitors or already transitioning away</li>
+      <li>Reputation risk if poor experience is shared internally or externally</li>
+    </ul>
+
+    <h3>Actions</h3>
+    <ol>
+      <li><strong>Escalate internally</strong> for exec visibility and support</li>
+      <li><strong>Create a recovery plan</strong> with clear owners and timelines</li>
+      <li><strong>Schedule 1:1 call</strong> with customer to review the plan</li>
+      <li><strong>Increase touchpoint frequency</strong> temporarily until stabilized</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Hi [Customer Name],<br><br>
+      I've seen a few signals that things might not be going as smoothly as we'd like.<br><br>
+      I'd love to connect and propose a recovery plan we can collaborate on.<br><br>
+      When's your next available 30 mins?<br><br>
+      Alternatively, my calendar [HERE] is updated -- feel free to book a time that works best.
+    </div>
+    <div class="msg-channel">Channel: Video Call + follow-up email summary</div>
+
+    <div class="callout callout-warn" style="margin-top: 16px;">
+      <div class="callout-label">Escalation Required</div>
+      <div class="callout-body">Red health accounts with renewal within 90 days must be escalated to Head of CS with a risk brief: ARR at risk, root cause, recovery actions taken, and recommended exec intervention.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: POC CHANGE ==================== -->
+<div class="section" id="play-poc">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--orange-light); color: var(--orange);">R3</div>
+      <div>
+        <h1>POC Change</h1>
+        <p class="subtitle">New decision-maker or contact change</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Primary point of contact leaves, changes roles, or a new decision-maker is introduced.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <p>Rebuild trust and establish yourself as a strategic partner to the new contact.</p>
+
+    <h3>Risk</h3>
+    <p>Lose influence, or new POC prefers other vendors. 30 to 40% of churned accounts had a POC change in the prior 6 months.</p>
+
+    <h3>Actions</h3>
+    <ol>
+      <li><strong>Respond within 24 hours</strong> of the introduction</li>
+      <li><strong>Research the new POC</strong> on LinkedIn (background, communication style signals)</li>
+      <li><strong>Prepare a one-page account summary</strong> (EEs, countries, products, key dates, open items, recent wins)</li>
+      <li><strong>Schedule an onboarding call</strong> within 5 business days</li>
+      <li><strong>Listen first (60%)</strong>, share account summary (20%), establish communication preferences (20%)</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Welcome aboard! I'd love to hear more about your goals and how we can support your success in this new role.<br><br>
+      Happy to set up some time to chat so I can walk you through everything we have in place and hear about your priorities.
+    </div>
+    <div class="msg-channel">Channel: Email, then intro call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: SUPPORT TICKETS ==================== -->
+<div class="section" id="play-tickets">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--orange-light); color: var(--orange);">R4</div>
+      <div>
+        <h1>Support Ticket Trends</h1>
+        <p class="subtitle">Rising volume or recurring issues</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Ticket volume rising, recurring issue categories, or client sentiment flagged as negative.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <p>Proactively address root causes, improve CSAT and retention. Show the client you're monitoring their experience.</p>
+
+    <h3>Risk</h3>
+    <p>Persistent issues cause churn or loss of trust. Unaddressed tickets erode the relationship silently.</p>
+
+    <h3>Actions</h3>
+    <ol>
+      <li><strong>Analyze tickets</strong> -- pull volume, categories, resolution times, repeat issues</li>
+      <li><strong>Reach out proactively</strong> before the client escalates</li>
+      <li><strong>Propose a joint action plan</strong> with root cause fixes and timelines</li>
+      <li><strong>Coordinate internally</strong> with the Support team lead</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      I noticed a few recent tickets related to [issue]. Would it help if we jumped on a call to work through the root cause and find a long-term fix?
+    </div>
+    <div class="msg-channel">Channel: Email, then Video Call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: ENTITY SETUP RISK ==================== -->
+<div class="section" id="play-entity">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--red-light); color: var(--red);">R5</div>
+      <div>
+        <h1>Entity Setup Risk</h1>
+        <p class="subtitle">Customer setting up their own entity / high EE concentration</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-risk">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Customer confirms or signals entity setup in a country, OR has high EE density in a single country (Rule of 5+).</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <ul>
+      <li>Proactively offer support with global payroll and value-added services (office setup, IT provisioning) to retain revenue</li>
+      <li>Position Remote People as a partner beyond EOR -- entity setup fast track, ongoing payroll, compliance support</li>
+      <li>Remain embedded as a partner even as the relationship evolves</li>
+    </ul>
+
+    <h3>Risk</h3>
+    <p>Customer transitions away completely after setting up their own entity, leading to loss of headcount and revenue.</p>
+
+    <h3>Actions</h3>
+    <ol>
+      <li><strong>Reach out when entity setup is confirmed or suspected</strong></li>
+      <li><strong>Offer continued support</strong> -- global payroll, office setup, IT provisioning</li>
+      <li><strong>Walk them through the entity setup fast track program</strong></li>
+      <li><strong>For multi-country accounts</strong>, reinforce value of EOR in countries where entity doesn't make sense</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Congrats on the new entity! That's a huge milestone, [Customer Name].<br><br>
+      We understand this is a natural transition and wanted to let you know that we're set up to support you beyond EOR and into your own entity.<br><br>
+      As you make this transition, global payroll, office setup, and IT provisioning can be a challenge. We can help keep things simple and continue to assist you in [Country].<br><br>
+      Happy to walk you through our entity setup fast track program.
+    </div>
+    <div class="msg-channel">Channel: Email or Call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: BACKFILL ==================== -->
+<div class="section" id="play-backfill">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--yellow-light); color: var(--yellow);">L1</div>
+      <div>
+        <h1>Backfill / Offboarding</h1>
+        <p class="subtitle">Involuntary/voluntary resignations, contract expiration</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Employee contract is expiring, employee has resigned, or termination/mutual exit has occurred.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <p>Help replace roles quickly and improve retention. Position recruitment services.</p>
+
+    <h3>Risk</h3>
+    <p>Gaps filled by competitors or role transitions to direct entities.</p>
+
+    <h3>Actions</h3>
+    <ol>
+      <li><strong>Watch for end dates and resignations</strong> -- be proactive about next steps</li>
+      <li><strong>Ask about backfill plans</strong> before the client starts looking elsewhere</li>
+      <li><strong>Position recruitment services</strong> (98% placement success rate)</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Templates</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      <strong>Contract Expiring:</strong><br>
+      I noticed [employee]'s fixed contract is soon to expire. Has [EE name] been a success for your team? Will you be extending the contract or do you already have a backfill plan? Happy to help keep things moving seamlessly.
+    </div>
+
+    <div class="msg-template" style="margin-top: 16px;">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      <strong>Employee Departed:</strong><br>
+      I noticed [EE name] is no longer in your roster. Do you already have a backfill plan, or would you like help sourcing potential candidates? We have a 98% placement success rate.
+    </div>
+    <div class="msg-channel">Channel: Email or Check-in / QBR call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: HIRING TRENDS ==================== -->
+<div class="section" id="play-hiring-trends">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--blue-light); color: var(--blue);">L2</div>
+      <div>
+        <h1>Hiring Trends</h1>
+        <p class="subtitle">Static, declining, or growing headcount</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">You observe changes in the customer's hiring pattern -- growth, plateau, or decline in specific markets.</div>
+  </div>
+
+  <div class="card">
+    <h3>Actions</h3>
+    <p>Track headcount and hiring pattern changes. Tailor your outreach based on the trend.</p>
+
+    <h3>Messaging by Scenario</h3>
+
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      <strong>Growth detected:</strong><br>
+      I noticed an uptick in hiring in [region/country]. Are there any big initiatives underway that we can support?
+    </div>
+
+    <div class="msg-template" style="margin-top: 16px;">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      <strong>Decline detected:</strong><br>
+      I noticed a slowdown in hiring in [region/country]. Is there a shift in priorities or any changes we should be aware of? Let me know if there's anything we can do to support.
+    </div>
+
+    <div class="msg-template" style="margin-top: 16px;">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      <strong>Stable / small account:</strong><br>
+      It seems like everything has been flowing smoothly for your [X] EEs in [Countries]. We recently launched a new payment option for customers and thought it may be beneficial to you.<br><br>
+      Instead of managing monthly invoices and recurring bank fees, you can now pay for your EOR employee seats annually and unlock several financial and operational benefits.
+    </div>
+    <div class="msg-channel">Channel: Email, then Check-in / QBR call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: QBR ==================== -->
+<div class="section" id="play-qbr">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--blue-light); color: var(--blue);">L3</div>
+      <div>
+        <h1>Schedule QBR</h1>
+        <p class="subtitle">Quarterly or semi-annual business review</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Quarterly cadence for Tier 1, semi-annual for Tier 2. Also triggered for at-risk accounts or accounts with low recent engagement.</div>
+  </div>
+
+  <div class="card">
+    <h3>Opportunity</h3>
+    <ul>
+      <li>Strengthen strategic alignment and customer trust</li>
+      <li>Showcase value delivered to date</li>
+      <li>Uncover growth, retention, or upsell opportunities</li>
+      <li>Reignite engagement with less active accounts</li>
+      <li>Gather feedback that shapes product/service improvements</li>
+    </ul>
+
+    <h3>Risk</h3>
+    <ul>
+      <li>Lack of visibility into sentiment may lead to silent churn</li>
+      <li>Stakeholders may not see the value of the meeting if poorly prepared</li>
+      <li>Missed opportunity to correct issues or prevent quiet disengagement</li>
+    </ul>
+
+    <h3>Actions</h3>
+    <ol>
+      <li>Schedule proactively (quarterly or semi-annually by tier)</li>
+      <li>Use a structured, value-driven agenda</li>
+      <li>Prepare personalized insights and outcomes ahead of time</li>
+      <li>Realign on goals, capture feedback, define next steps</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      As part of our ongoing commitment to your success, let's schedule your next Quarterly Business Review.<br><br>
+      This session is a chance for us to reflect on how things have gone so far, hear what's happening in your world, share what's new on our side, and plan for what's next. Promise it will be worth your time.<br><br>
+      Could you let me know your availability in the next 2 weeks? I'm happy to accommodate what works best. If you prefer, you can schedule directly [here].
+    </div>
+    <div class="msg-channel">Channel: Email or Call</div>
+  </div>
+</div>
+
+<!-- ==================== PLAY: HOLIDAYS ==================== -->
+<div class="section" id="play-holidays">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--purple-light); color: var(--purple);">L4</div>
+      <div>
+        <h1>Holidays &amp; Special Occasions</h1>
+        <p class="subtitle">Build rapport and show cultural awareness</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trigger">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">Local holiday or special event relevant to the customer or their team's country.</div>
+  </div>
+
+  <div class="card">
+    <h3>Action</h3>
+    <p>Send good wishes on local holidays or special events. Quick touch, no ask.</p>
+
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Happy [Holiday]! Wishing you and your team in [country] a wonderful celebration.
+    </div>
+    <div class="msg-channel">Channel: Email</div>
+  </div>
+</div>
+
+<!-- ==================== PRODUCT: ANNUAL UPFRONTS ==================== -->
+<div class="section" id="product-annual">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--green-light); color: var(--green);">P1</div>
+      <div>
+        <h1>Annual Upfronts</h1>
+        <p class="subtitle">Annual billing payment option</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What It Is</h3>
+    <p>Remote People's Annual Billing Option allows customers to prepay for 12 months of EOR service fees per employee. Seats are prepaid and can be reused if an employee leaves during the term. Customers receive a <strong>10% discount</strong> (equivalent to 1 month free). Recruitment services available for sourcing replacements.</p>
+
+    <h3>Who It's For</h3>
+    <ul>
+      <li>Customers planning to retain EOR employee(s) for 12+ months</li>
+      <li>Companies operating long-term in one or more countries</li>
+      <li>Customers seeking budget predictability</li>
+      <li>Accounts influenced by procurement or finance teams</li>
+    </ul>
+
+    <h3>When to Bring It Up</h3>
+    <table>
+      <tr><th>Trigger</th><th>Example</th></tr>
+      <tr><td><strong>QBR / Check-in</strong></td><td>Long-term hiring or retention discussions</td></tr>
+      <tr><td><strong>Expansion</strong></td><td>Multiple hires in a country</td></tr>
+      <tr><td><strong>Budgeting</strong></td><td>Procurement or finance joins the call</td></tr>
+      <tr><td><strong>Offboarding</strong></td><td>A seat becomes available due to employee departure</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Benefits</h3>
+    <table>
+      <tr><th>For Customer</th><th>For Us</th></tr>
+      <tr><td>One invoice instead of monthly cycles</td><td>Revenue assurance</td></tr>
+      <tr><td>Predictable annual budgeting</td><td>Lower churn risk</td></tr>
+      <tr><td>Locked pricing for 12 months</td><td>Stronger customer commitment</td></tr>
+      <tr><td>Free EE replacement if offboarded</td><td></td></tr>
+      <tr><td>Access to recruitment support</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>CSM Actions</h3>
+    <table>
+      <tr><th>Action</th><th>What</th></tr>
+      <tr><td><strong>Ask</strong></td><td>"Are you planning to keep your EOR employee(s) for 12+ months?" / "Would a single annual payment simplify procurement?"</td></tr>
+      <tr><td><strong>Check</strong></td><td>Growth plans, team stability, procurement involvement, budgeting timeline</td></tr>
+      <tr><td><strong>Share</strong></td><td>"Annual pricing saves you 1 month free of service fees and simplifies billing."</td></tr>
+      <tr><td><strong>Escalate</strong></td><td>Alex Hayman (invoice setup), Recruitment team (backfill support)</td></tr>
+      <tr><td><strong>Track</strong></td><td>CRM + Annual Contract Tracker.xlsx</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Template</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      <strong>Subject: Payment option</strong><br><br>
+      Hey [Customer Name], quick note: if you're planning to continue your work with [Name, Name] or any of your employees in [country] for 12+ months, we have an annual billing option that could save you 10% (or 1 whole month of service fees free), simplify invoicing, and facilitate business continuity should anything change with your employee's status.<br><br>
+      Open to discussing this, or would you prefer I share some info with your team first?
+    </div>
+    <div class="msg-channel">Channel: Email</div>
+
+    <h3 style="margin-top: 20px;">Process Steps &amp; Owners</h3>
+    <table>
+      <tr><th>Action</th><th>Primary Owner</th><th>Stakeholders</th></tr>
+      <tr><td>Fill Annual Pricing Tracker</td><td>AE / CSM</td><td>Juan Correa, Neema Ardebili</td></tr>
+      <tr><td>Notify team via email</td><td>AE / CSM</td><td>Alex, Carlos, Jody, Lina</td></tr>
+      <tr><td>Set up annual invoice</td><td>Alex Hayman</td><td></td></tr>
+      <tr><td>Suppress monthly invoicing</td><td>Alex</td><td>Carlos Manjon</td></tr>
+      <tr><td>Track offboardings / reallocation</td><td>Juan C</td><td></td></tr>
+      <tr><td>Ensure fees not loaded to Juno</td><td>Alex / Clare</td><td></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== PRODUCT: RECRUITMENT ==================== -->
+<div class="section" id="product-recruitment">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--blue-light); color: var(--blue);">P2</div>
+      <div>
+        <h1>Recruitment Services</h1>
+        <p class="subtitle">Find, vet, and place top-tier talent across 150+ countries</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What It Is</h3>
+    <p>Remote People's Recruitment Services help customers find, vet, and place top-tier talent across 150+ countries. We offer curated candidate shortlists, fast turnaround, and deep expertise in local markets.</p>
+
+    <h3>Who It's For</h3>
+    <ul>
+      <li>Customers with employees across multiple countries</li>
+      <li>Customers hiring multiple roles in one country</li>
+      <li>Teams with lean HR or no internal recruiters</li>
+      <li>Customers with open roles for more than 15 days</li>
+    </ul>
+
+    <h3>When to Bring It Up</h3>
+    <table>
+      <tr><th>Trigger</th><th>What to Listen For</th></tr>
+      <tr><td><strong>Onboarding</strong></td><td>"We need to hire quickly" / "We have no recruiters"</td></tr>
+      <tr><td><strong>QBR / Check-in</strong></td><td>Growth plans or hiring pipeline review</td></tr>
+      <tr><td><strong>Job Postings</strong></td><td>New roles on LinkedIn or local job boards</td></tr>
+      <tr><td><strong>Turnover</strong></td><td>Resignations, terminations, or mutual exits</td></tr>
+      <tr><td><strong>Funding News</strong></td><td>Post-raise hiring plans or team expansion</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>CSM Actions</h3>
+    <table>
+      <tr><th>Action</th><th>What</th></tr>
+      <tr><td><strong>Ask</strong></td><td>"Do you have open roles you've struggled to fill?" / "Would it help to have locally vetted candidates fast?"</td></tr>
+      <tr><td><strong>Check</strong></td><td>Open roles, hiring trends, headcount growth, country-level needs, hard-to-hire roles</td></tr>
+      <tr><td><strong>Share</strong></td><td>"We've placed 98% of roles within 2 weeks" / "You'll get a pre-vetted shortlist in under 7 days in [Country]"</td></tr>
+      <tr><td><strong>Escalate</strong></td><td>To the Recruitment Team for scoping or candidate delivery</td></tr>
+      <tr><td><strong>Track</strong></td><td>Hiring progress in OKR tracker or CRM notes</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Messaging Templates</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      <strong>Subject: Can we help you fill those roles faster?</strong><br><br>
+      Hi [Customer Name],<br><br>
+      I noticed your team has open roles in [country/region]. Did you know our recruiters can deliver pre-vetted candidates in under a week?<br><br>
+      Worth a chat?
+    </div>
+    <div class="msg-channel">Channel: Email or LinkedIn</div>
+
+    <div class="callout callout-tip" style="margin-top: 16px;">
+      <div class="callout-label">QBR Talking Point</div>
+      <div class="callout-body">"How are your hiring efforts going in [region]? Would you like us to help source candidates to speed things up?"</div>
+    </div>
+
+    <h3 style="margin-top: 20px;">Enablement Aids</h3>
+    <ul>
+      <li>Recruitment Services Overview PDF</li>
+      <li>Selling Countries PDF</li>
+      <li>CSM Quick FAQ for Recruitment</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== PRODUCT: FULL SUITE ==================== -->
+<div class="section" id="product-suite">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--purple-light); color: var(--purple);">P3</div>
+      <div>
+        <h1>Full Product Suite</h1>
+        <p class="subtitle">Reference: all Remote People products and services</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr><th>Product</th><th>What It Does</th><th>Ideal For</th></tr>
+      <tr><td><strong>Employer of Record (EOR)</strong></td><td>Hire and manage employees in 130+ countries without local entities</td><td>Any customer hiring internationally</td></tr>
+      <tr><td><strong>Global Payroll</strong></td><td>Consolidated multi-country payroll through a single platform</td><td>Customers with 5+ countries, managing payroll separately</td></tr>
+      <tr><td><strong>Entity Setup</strong></td><td>Establish legal entities in new markets with full compliance support</td><td>Customers with high EE concentration in one country (10+)</td></tr>
+      <tr><td><strong>Recruitment</strong></td><td>Source and hire talent in new markets through local recruiting networks</td><td>Lean HR teams, open roles 15+ days, new market entries</td></tr>
+      <tr><td><strong>Global Mobility</strong></td><td>Employee relocation and visa support for international transfers</td><td>Customers moving employees between countries</td></tr>
+      <tr><td><strong>Value-Added Services (VAS)</strong></td><td>Equipment procurement, coworking access, benefits enhancement</td><td>Distributed teams needing local infrastructure support</td></tr>
+    </table>
+
+    <div class="callout callout-tip" style="margin-top: 16px;">
+      <div class="callout-label">Internal Notes (to update)</div>
+      <div class="callout-body">
+        Global Payroll: Open to every country -- we can take up to 10 requests a month.<br>
+        QBR talking points and objection management: [link needed]<br>
+        Brochure: [in development]<br>
+        Entity setup proposal: create pressure to Henri -- target 10 customers.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main-content -->
+</div><!-- /page-wrapper -->
+
+<script>
+function showSection(sectionId) {
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  // Show target
+  const target = document.getElementById(sectionId);
+  if (target) target.classList.add('active');
+
+  // Update nav
+  document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  // Scroll to top of main content
+  document.querySelector('.main-content').scrollTo(0, 0);
+  window.scrollTo(0, 0);
+}
+
+function copyTemplate(btn) {
+  const template = btn.parentElement;
+  const clone = template.cloneNode(true);
+  // Remove the copy button from clone
+  const cloneBtn = clone.querySelector('.copy-btn');
+  if (cloneBtn) cloneBtn.remove();
+  // Remove strong tags but keep text
+  clone.querySelectorAll('strong').forEach(s => {
+    s.replaceWith(s.textContent);
+  });
+  // Get text content, replacing <br> with newlines
+  let html = clone.innerHTML;
+  html = html.replace(/<br\s*\/?>/gi, '\n');
+  const text = html.replace(/<[^>]*>/g, '').trim();
+
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.style.color = '#059669';
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.color = '';
+    }, 1500);
+  });
+}
+</script>
+
+</body>
+</html>
