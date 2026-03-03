@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Remote People - CS Success Plays 2026</title>
+<title>Remote People - CS Hub 2026</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -36,12 +36,17 @@
     --teal: #0D9488;
     --teal-light: #F0FDFA;
     --teal-border: #99F6E4;
+    --indigo: #4F46E5;
+    --indigo-light: #EEF2FF;
+    --indigo-border: #C7D2FE;
     --mono: 'JetBrains Mono', monospace;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
+  html, body {
+    height: 100%;
+    overflow: hidden;
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--text-primary);
@@ -50,66 +55,70 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ---- LAYOUT ---- */
+  /* ---- LAYOUT: fills iframe completely ---- */
   .page-wrapper {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
   }
 
   /* ---- SIDEBAR NAV ---- */
   .sidebar {
-    width: 280px;
+    width: 260px;
+    min-width: 260px;
     background: var(--surface);
     border-right: 1px solid var(--border);
-    position: fixed;
-    top: 0;
-    left: 0;
     height: 100vh;
     overflow-y: auto;
-    z-index: 100;
-    padding: 24px 0;
+    padding: 20px 0;
+    flex-shrink: 0;
   }
 
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
   .sidebar-logo {
-    padding: 0 20px 20px;
+    padding: 0 16px 16px;
     border-bottom: 1px solid var(--border-light);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .sidebar-logo h2 {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--text-primary);
     letter-spacing: -0.3px;
   }
 
   .sidebar-logo span {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
     font-weight: 500;
   }
 
   .nav-section-label {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--text-muted);
-    padding: 16px 20px 6px;
+    padding: 14px 16px 4px;
   }
 
   .nav-link {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 20px;
-    font-size: 13.5px;
+    gap: 8px;
+    padding: 6px 16px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--text-secondary);
     text-decoration: none;
     transition: all 0.15s;
     border-left: 3px solid transparent;
     cursor: pointer;
+    user-select: none;
   }
 
   .nav-link:hover {
@@ -125,62 +134,95 @@
   }
 
   .nav-dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     flex-shrink: 0;
   }
 
+  /* ---- MOBILE MENU TOGGLE ---- */
+  .mobile-header {
+    display: none;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  .mobile-header h2 { font-size: 14px; font-weight: 700; }
+
+  .menu-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+
+  .menu-btn:hover { color: var(--text-primary); }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.3);
+    z-index: 150;
+  }
+
   /* ---- MAIN CONTENT ---- */
   .main-content {
-    margin-left: 280px;
     flex: 1;
-    padding: 32px 48px 80px;
-    max-width: 900px;
+    overflow-y: auto;
+    padding: 28px 40px 60px;
+    height: 100vh;
   }
+
+  .main-content::-webkit-scrollbar { width: 6px; }
+  .main-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
   /* ---- HEADER ---- */
-  .page-header {
-    margin-bottom: 40px;
-  }
+  .page-header { margin-bottom: 28px; }
 
   .page-header h1 {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.5px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .page-header .subtitle {
     color: var(--text-secondary);
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .last-updated {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+    font-size: 11px;
     font-family: var(--mono);
     color: var(--text-muted);
     background: var(--bg);
-    padding: 4px 10px;
+    padding: 3px 8px;
     border-radius: 4px;
-    margin-top: 12px;
+    margin-top: 10px;
   }
 
   /* ---- SECTIONS ---- */
-  .section {
-    display: none;
-    animation: fadeIn 0.2s ease;
-  }
-
-  .section.active {
-    display: block;
-  }
+  .section { display: none; animation: fadeIn 0.2s ease; }
+  .section.active { display: block; }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
@@ -189,133 +231,77 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 24px;
-    margin-bottom: 20px;
+    padding: 22px;
+    margin-bottom: 16px;
   }
 
-  .card h2 {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    margin-bottom: 4px;
-  }
-
-  .card h3 {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    margin-top: 20px;
-    color: var(--text-primary);
-  }
-
+  .card h2 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; }
+  .card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; margin-top: 18px; color: var(--text-primary); }
   .card h3:first-child { margin-top: 0; }
-
-  .card p {
-    color: var(--text-secondary);
-    margin-bottom: 12px;
-  }
-
-  .card ul, .card ol {
-    margin: 8px 0 12px 20px;
-    color: var(--text-secondary);
-  }
-
-  .card li {
-    margin-bottom: 6px;
-    padding-left: 4px;
-  }
-
-  .card li strong {
-    color: var(--text-primary);
-  }
+  .card p { color: var(--text-secondary); margin-bottom: 10px; font-size: 14px; }
+  .card ul, .card ol { margin: 6px 0 10px 18px; color: var(--text-secondary); font-size: 14px; }
+  .card li { margin-bottom: 5px; padding-left: 4px; }
+  .card li strong { color: var(--text-primary); }
 
   /* ---- CALLOUT BOXES ---- */
   .callout {
-    padding: 14px 16px;
+    padding: 12px 14px;
     border-radius: 8px;
-    margin: 16px 0;
-    font-size: 14px;
+    margin: 14px 0;
+    font-size: 13px;
     border-left: 4px solid;
   }
 
-  .callout-trigger {
-    background: var(--blue-light);
-    border-color: var(--blue);
-  }
-
+  .callout-trigger { background: var(--blue-light); border-color: var(--blue); }
   .callout-trigger .callout-label { color: var(--blue); }
-
-  .callout-risk {
-    background: var(--red-light);
-    border-color: var(--red);
-  }
-
+  .callout-risk { background: var(--red-light); border-color: var(--red); }
   .callout-risk .callout-label { color: var(--red); }
-
-  .callout-tip {
-    background: var(--green-light);
-    border-color: var(--green);
-  }
-
+  .callout-tip { background: var(--green-light); border-color: var(--green); }
   .callout-tip .callout-label { color: var(--green); }
-
-  .callout-warn {
-    background: var(--yellow-light);
-    border-color: var(--yellow);
-  }
-
+  .callout-warn { background: var(--yellow-light); border-color: var(--yellow); }
   .callout-warn .callout-label { color: var(--yellow); }
 
   .callout-label {
     font-weight: 700;
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
 
-  .callout-body {
-    color: var(--text-primary);
-    line-height: 1.5;
-  }
+  .callout-body { color: var(--text-primary); line-height: 1.5; }
 
   /* ---- TABLES ---- */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    font-size: 13.5px;
-  }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
 
   th {
     background: var(--bg);
     font-weight: 600;
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.6px;
     color: var(--text-muted);
-    padding: 10px 14px;
+    padding: 8px 12px;
     text-align: left;
     border-bottom: 2px solid var(--border);
   }
 
   td {
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-bottom: 1px solid var(--border-light);
     color: var(--text-secondary);
     vertical-align: top;
   }
 
   td strong { color: var(--text-primary); }
-
   tr:last-child td { border-bottom: none; }
 
   /* ---- TAGS ---- */
   .tag {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 2px 7px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.3px;
   }
@@ -327,15 +313,154 @@
   .tag-purple { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
   .tag-orange { background: var(--orange-light); color: var(--orange); border: 1px solid var(--orange-border); }
   .tag-teal { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+  .tag-indigo { background: var(--indigo-light); color: var(--indigo); border: 1px solid var(--indigo-border); }
+
+  /* ---- WEEK BLOCK (training) ---- */
+  .week-block {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .week-header {
+    padding: 12px 18px;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .week-header:hover { filter: brightness(0.97); }
+  .week-header .week-title { display: flex; align-items: center; gap: 10px; }
+
+  .week-header .chevron {
+    transition: transform 0.2s;
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  .week-header.open .chevron { transform: rotate(180deg); }
+
+  .week-body {
+    display: none;
+    padding: 0 18px 18px;
+    background: var(--surface);
+  }
+
+  .week-body.open { display: block; }
+
+  /* ---- DAY ROW ---- */
+  .day-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 120px;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    align-items: start;
+  }
+
+  .day-row:last-child { border-bottom: none; }
+
+  .day-label { font-weight: 600; font-size: 12px; color: var(--text-primary); padding-top: 2px; }
+  .day-content { color: var(--text-secondary); font-size: 13px; }
+  .day-content strong { color: var(--text-primary); }
+  .day-format { font-size: 11px; font-weight: 500; color: var(--text-muted); text-align: right; padding-top: 2px; }
+
+  /* ---- MILESTONE ---- */
+  .milestone {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .milestone-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .milestone-content h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .milestone-content p { font-size: 12px; color: var(--text-secondary); margin: 0; }
+
+  /* ---- CHECKLIST ---- */
+  .checklist { list-style: none; margin: 0; padding: 0; }
+
+  .checklist li {
+    padding: 7px 0 7px 26px;
+    position: relative;
+    color: var(--text-secondary);
+    font-size: 13px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 9px;
+    width: 16px; height: 16px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+  }
+
+  /* ---- PHASE BADGE ---- */
+  .phase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  /* ---- PROGRESS BAR ---- */
+  .progress-track { display: flex; gap: 3px; margin: 16px 0; }
+
+  .progress-segment {
+    flex: 1;
+    height: 7px;
+    border-radius: 4px;
+    background: var(--border-light);
+  }
+
+  .progress-segment.filled { background: var(--blue); }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
 
   /* ---- MESSAGING TEMPLATE ---- */
   .msg-template {
     background: #FAFBFC;
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 16px 18px;
-    margin: 12px 0;
-    font-size: 14px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    font-size: 13px;
     line-height: 1.6;
     color: var(--text-primary);
     position: relative;
@@ -344,11 +469,11 @@
   .msg-template::before {
     content: 'TEMPLATE';
     position: absolute;
-    top: -9px;
-    left: 14px;
+    top: -8px;
+    left: 12px;
     background: #FAFBFC;
-    padding: 0 6px;
-    font-size: 10px;
+    padding: 0 5px;
+    font-size: 9px;
     font-weight: 700;
     letter-spacing: 0.8px;
     color: var(--text-muted);
@@ -358,122 +483,124 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    margin-top: 8px;
-    font-size: 12px;
+    margin-top: 6px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--text-muted);
   }
 
-  /* ---- PERSONA CARDS ---- */
-  .persona-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin: 16px 0;
-  }
-
-  .persona-card {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px;
-    background: var(--surface);
-  }
-
-  .persona-card h4 {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .persona-section-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--text-muted);
-    margin-top: 10px;
-    margin-bottom: 4px;
-  }
-
-  .persona-card ul {
-    margin: 0 0 0 16px;
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-
-  .persona-card li { margin-bottom: 3px; }
-
-  /* ---- PLAY HEADER ---- */
-  .play-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .play-number {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 15px;
-    flex-shrink: 0;
-  }
-
-  /* ---- DIVIDER ---- */
-  .divider {
-    height: 1px;
-    background: var(--border-light);
-    margin: 24px 0;
-  }
-
-  /* ---- COPY BUTTON ---- */
   .copy-btn {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 6px;
+    right: 6px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 11px;
+    padding: 3px 7px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--text-muted);
     cursor: pointer;
     transition: all 0.15s;
   }
 
-  .copy-btn:hover {
-    color: var(--blue);
-    border-color: var(--blue-border);
+  .copy-btn:hover { color: var(--blue); border-color: var(--blue-border); }
+
+  /* ---- PERSONA CARDS ---- */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 14px 0;
   }
 
-  .msg-template { position: relative; }
+  .persona-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    background: var(--surface);
+  }
 
-  /* ---- PRODUCT BADGE ---- */
-  .product-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 10px;
-    border-radius: 20px;
+  .persona-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .persona-section-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    margin-bottom: 3px;
+  }
+
+  .persona-card ul {
+    margin: 0 0 0 14px;
     font-size: 12px;
-    font-weight: 600;
-    margin-right: 6px;
-    margin-bottom: 6px;
+    color: var(--text-secondary);
   }
 
-  /* ---- MOBILE ---- */
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main-content { margin-left: 0; padding: 20px; }
+  .persona-card li { margin-bottom: 2px; }
+
+  /* ---- PLAY HEADER ---- */
+  .play-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .play-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .divider { height: 1px; background: var(--border-light); margin: 20px 0; }
+
+  /* ---- RESPONSIVE: small iframe or mobile ---- */
+  @media (max-width: 700px) {
+    .sidebar {
+      position: fixed;
+      left: -280px;
+      top: 0;
+      z-index: 200;
+      transition: left 0.25s ease;
+      box-shadow: none;
+    }
+
+    .sidebar.open {
+      left: 0;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+    }
+
+    .sidebar-overlay.open {
+      display: block;
+    }
+
+    .mobile-header { display: flex; }
+
+    .main-content {
+      padding: 0 16px 40px;
+      height: calc(100vh - 48px);
+    }
+
+    .page-wrapper {
+      flex-direction: column;
+    }
+
     .persona-grid { grid-template-columns: 1fr; }
+    .day-row { grid-template-columns: 1fr; gap: 3px; }
+    .day-format { text-align: left; }
   }
 </style>
 </head>
@@ -481,118 +608,199 @@
 
 <div class="page-wrapper">
 
+<!-- ---- MOBILE HEADER ---- -->
+<div class="mobile-header">
+  <h2>CS Success Plays 2026</h2>
+  <button class="menu-btn" onclick="toggleMobileMenu()">Menu</button>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
+
 <!-- ======== SIDEBAR ======== -->
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <h2>Remote People</h2>
-    <span>CS Success Plays 2026</span>
+    <span>CS Hub 2026</span>
   </div>
 
   <div class="nav-section-label">Reference</div>
-  <a class="nav-link active" onclick="showSection('overview')">
+  <a class="nav-link active" onclick="showSection('overview', this)">
     <span class="nav-dot" style="background: var(--blue)"></span> How to Use This
   </a>
-  <a class="nav-link" onclick="showSection('personas')">
+  <a class="nav-link" onclick="showSection('personas', this)">
     <span class="nav-dot" style="background: var(--purple)"></span> Persona Mapping
   </a>
 
+  <div class="nav-section-label">Enablement</div>
+  <a class="nav-link" onclick="showSection('tr-overview', this)">
+    <span class="nav-dot" style="background: var(--indigo)"></span> Program Overview
+  </a>
+  <a class="nav-link" onclick="showSection('tr-philosophy', this)">
+    <span class="nav-dot" style="background: var(--indigo)"></span> Training Philosophy
+  </a>
+
+  <div class="nav-section-label">90-Day New Hire Ramp</div>
+  <a class="nav-link" onclick="showSection('tr-phase1', this)">
+    <span class="nav-dot" style="background: var(--green)"></span> Phase 1: Foundation
+  </a>
+  <a class="nav-link" onclick="showSection('tr-phase2', this)">
+    <span class="nav-dot" style="background: var(--blue)"></span> Phase 2: Shadowing
+  </a>
+  <a class="nav-link" onclick="showSection('tr-phase3', this)">
+    <span class="nav-dot" style="background: var(--purple)"></span> Phase 3: Guided Practice
+  </a>
+  <a class="nav-link" onclick="showSection('tr-phase4', this)">
+    <span class="nav-dot" style="background: var(--teal)"></span> Phase 4: Independence
+  </a>
+  <a class="nav-link" onclick="showSection('tr-milestones', this)">
+    <span class="nav-dot" style="background: var(--orange)"></span> Milestones
+  </a>
+  <a class="nav-link" onclick="showSection('tr-certification', this)">
+    <span class="nav-dot" style="background: var(--green)"></span> Certification
+  </a>
+
+  <div class="nav-section-label">Ongoing Training</div>
+  <a class="nav-link" onclick="showSection('tr-weekly-calendar', this)">
+    <span class="nav-dot" style="background: var(--blue)"></span> Weekly Calendar
+  </a>
+  <a class="nav-link" onclick="showSection('tr-quarterly', this)">
+    <span class="nav-dot" style="background: var(--purple)"></span> Quarterly Deep Dives
+  </a>
+  <a class="nav-link" onclick="showSection('tr-resources', this)">
+    <span class="nav-dot" style="background: var(--teal)"></span> Training Resources
+  </a>
+
+  <div class="nav-section-label">For Managers</div>
+  <a class="nav-link" onclick="showSection('tr-manager-guide', this)">
+    <span class="nav-dot" style="background: var(--orange)"></span> Manager's Guide
+  </a>
+  <a class="nav-link" onclick="showSection('tr-qa-framework', this)">
+    <span class="nav-dot" style="background: var(--red)"></span> QA &amp; Assessment
+  </a>
+
+  <div class="nav-section-label">Products &amp; Offers</div>
+  <a class="nav-link" onclick="showSection('product-annual', this)">
+    <span class="nav-dot" style="background: var(--green)"></span> Annual Upfronts
+  </a>
+  <a class="nav-link" onclick="showSection('product-recruitment', this)">
+    <span class="nav-dot" style="background: var(--blue)"></span> Recruitment Services
+  </a>
+  <a class="nav-link" onclick="showSection('product-suite', this)">
+    <span class="nav-dot" style="background: var(--purple)"></span> Full Product Suite
+  </a>
+
   <div class="nav-section-label">Growth Plays</div>
-  <a class="nav-link" onclick="showSection('play-green')">
+  <a class="nav-link" onclick="showSection('play-green', this)">
     <span class="nav-dot" style="background: var(--green)"></span> Health = Green
   </a>
-  <a class="nav-link" onclick="showSection('play-expansion')">
+  <a class="nav-link" onclick="showSection('play-expansion', this)">
     <span class="nav-dot" style="background: var(--teal)"></span> Expansion Signals
   </a>
-  <a class="nav-link" onclick="showSection('play-hiring')">
+  <a class="nav-link" onclick="showSection('play-hiring', this)">
     <span class="nav-dot" style="background: var(--blue)"></span> Open Roles Detected
   </a>
-  <a class="nav-link" onclick="showSection('play-funding')">
+  <a class="nav-link" onclick="showSection('play-funding', this)">
     <span class="nav-dot" style="background: var(--purple)"></span> Funding / Market News
   </a>
-  <a class="nav-link" onclick="showSection('play-multi-country')">
+  <a class="nav-link" onclick="showSection('play-multi-country', this)">
     <span class="nav-dot" style="background: var(--teal)"></span> Multi-Country Growth
   </a>
-  <a class="nav-link" onclick="showSection('play-referral')">
+  <a class="nav-link" onclick="showSection('play-referral', this)">
     <span class="nav-dot" style="background: var(--green)"></span> Referral Ask
   </a>
 
   <div class="nav-section-label">Risk Plays</div>
-  <a class="nav-link" onclick="showSection('play-yellow')">
+  <a class="nav-link" onclick="showSection('play-yellow', this)">
     <span class="nav-dot" style="background: var(--yellow)"></span> Health = Yellow
   </a>
-  <a class="nav-link" onclick="showSection('play-red')">
+  <a class="nav-link" onclick="showSection('play-red', this)">
     <span class="nav-dot" style="background: var(--red)"></span> Health = Red
   </a>
-  <a class="nav-link" onclick="showSection('play-poc')">
+  <a class="nav-link" onclick="showSection('play-poc', this)">
     <span class="nav-dot" style="background: var(--orange)"></span> POC Change
   </a>
-  <a class="nav-link" onclick="showSection('play-tickets')">
+  <a class="nav-link" onclick="showSection('play-tickets', this)">
     <span class="nav-dot" style="background: var(--orange)"></span> Support Ticket Trends
   </a>
-  <a class="nav-link" onclick="showSection('play-entity')">
+  <a class="nav-link" onclick="showSection('play-entity', this)">
     <span class="nav-dot" style="background: var(--red)"></span> Entity Setup Risk
+  </a>
+  <a class="nav-link" onclick="showSection('play-collections', this)">
+    <span class="nav-dot" style="background: var(--red)"></span> Collections (Past Due)
   </a>
 
   <div class="nav-section-label">Lifecycle Plays</div>
-  <a class="nav-link" onclick="showSection('play-backfill')">
+  <a class="nav-link" onclick="showSection('play-backfill', this)">
     <span class="nav-dot" style="background: var(--yellow)"></span> Backfill / Offboarding
   </a>
-  <a class="nav-link" onclick="showSection('play-hiring-trends')">
+  <a class="nav-link" onclick="showSection('play-hiring-trends', this)">
     <span class="nav-dot" style="background: var(--blue)"></span> Hiring Trends
   </a>
-  <a class="nav-link" onclick="showSection('play-qbr')">
+  <a class="nav-link" onclick="showSection('play-qbr', this)">
     <span class="nav-dot" style="background: var(--blue)"></span> Schedule QBR
   </a>
-  <a class="nav-link" onclick="showSection('play-holidays')">
+  <a class="nav-link" onclick="showSection('play-holidays', this)">
     <span class="nav-dot" style="background: var(--purple)"></span> Holidays / Occasions
-  </a>
-
-  <div class="nav-section-label">Products & Offers</div>
-  <a class="nav-link" onclick="showSection('product-annual')">
-    <span class="nav-dot" style="background: var(--green)"></span> Annual Upfronts
-  </a>
-  <a class="nav-link" onclick="showSection('product-recruitment')">
-    <span class="nav-dot" style="background: var(--blue)"></span> Recruitment Services
-  </a>
-  <a class="nav-link" onclick="showSection('product-suite')">
-    <span class="nav-dot" style="background: var(--purple)"></span> Full Product Suite
   </a>
 </nav>
 
 <!-- ======== MAIN CONTENT ======== -->
-<div class="main-content">
+<div class="main-content" id="mainContent">
 
 <!-- ==================== OVERVIEW ==================== -->
 <div class="section active" id="overview">
   <div class="page-header">
-    <h1>CS Success Plays</h1>
-    <p class="subtitle">Trigger-based playbook for growth, retention, and lifecycle management</p>
+    <h1>CS Hub</h1>
+    <p class="subtitle">Everything your team needs in one place -- training, playbooks, products, and processes</p>
     <div class="last-updated">Updated: March 2026</div>
   </div>
 
   <div class="card">
-    <h2>How This Works</h2>
-    <p>Each play is built around a <strong>trigger</strong> -- a signal that something is changing in a customer's business, team, or strategy. When you spot a trigger, run the play.</p>
+    <h2>Welcome</h2>
+    <p>This is the single source of truth for the Remote People Customer Success team. Whether you are a new hire on Day 1 or a senior CSM preparing for a QBR, everything you need is in the sidebar to the left.</p>
+    <p>Use this hub during client calls (the sidebar lets you jump to any play instantly), during onboarding (follow the 90-day ramp phase by phase), and as a daily reference for messaging templates, product positioning, and account strategy.</p>
+  </div>
 
+  <div class="card">
+    <h2>What's In Here</h2>
+    <table>
+      <tr><th>Section</th><th>What It Covers</th><th>Who It's For</th></tr>
+      <tr><td><span class="tag tag-blue">REFERENCE</span></td><td>This overview and Persona Mapping (CEO, CFO, CHRO, VP People, VP Sales)</td><td>Everyone</td></tr>
+      <tr><td><span class="tag tag-indigo">ENABLEMENT</span></td><td>Training philosophy, Sandler foundation, program overview, and ownership model</td><td>New hires + Managers</td></tr>
+      <tr><td><span class="tag tag-green">90-DAY RAMP</span></td><td>Phase 1 (Foundation), Phase 2 (Shadowing), Phase 3 (Guided Practice), Phase 4 (Independence), Milestones, Certification criteria</td><td>New hires</td></tr>
+      <tr><td><span class="tag tag-blue">ONGOING TRAINING</span></td><td>Weekly training calendar (12-month rotation), Quarterly deep dives, recommended resources</td><td>All CSMs</td></tr>
+      <tr><td><span class="tag tag-orange">FOR MANAGERS</span></td><td>New hire checklist, coaching rhythm, buddy selection, ramp challenges, QA scorecard (7 dimensions, 1 to 5 scale)</td><td>CS Lead + Head of CS</td></tr>
+      <tr><td><span class="tag tag-purple">PRODUCTS</span></td><td>Annual Upfronts (10% discount), Recruitment Services (98% placement), Full Product Suite reference</td><td>All CSMs</td></tr>
+      <tr><td><span class="tag tag-green">GROWTH PLAYS</span></td><td>6 plays: Green Health, Expansion Signals, Open Roles, Funding/News, Multi-Country, Referrals</td><td>All CSMs</td></tr>
+      <tr><td><span class="tag tag-red">RISK PLAYS</span></td><td>6 plays: Yellow Health, Red Health, POC Change, Ticket Trends, Entity Setup, Collections</td><td>All CSMs</td></tr>
+      <tr><td><span class="tag tag-blue">LIFECYCLE PLAYS</span></td><td>4 plays: Backfill/Offboarding, Hiring Trends, QBR Scheduling, Holidays</td><td>All CSMs</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>How Plays Work</h2>
+    <p>Each play is built around a <strong>trigger</strong> -- a signal that something is changing in a customer's business, team, or strategy. When you spot a trigger, run the play.</p>
     <table>
       <tr><th>Element</th><th>What It Tells You</th></tr>
       <tr><td><strong>Trigger</strong></td><td>The signal that activates the play. What you see in HubSpot, LinkedIn, tickets, or conversation.</td></tr>
       <tr><td><strong>Opportunity</strong></td><td>What you can gain by acting: expansion, retention, advocacy, deeper relationship.</td></tr>
       <tr><td><strong>Risk</strong></td><td>What you lose by not acting: churn, revenue loss, competitor foothold.</td></tr>
       <tr><td><strong>Actions</strong></td><td>Step-by-step. What to do, in what order, and who to involve.</td></tr>
-      <tr><td><strong>Messaging</strong></td><td>Copy-paste templates you can personalize. Tested language that works.</td></tr>
-      <tr><td><strong>Channel</strong></td><td>Where to reach out: email, call, LinkedIn, QBR, or a combination.</td></tr>
+      <tr><td><strong>Messaging</strong></td><td>Copy-paste templates you can personalize. Hit the <strong>Copy</strong> button and paste directly into email or chat.</td></tr>
+      <tr><td><strong>Channel</strong></td><td>Where to reach out: email, call, LinkedIn, WhatsApp, QBR, or a combination.</td></tr>
     </table>
   </div>
 
   <div class="card">
-    <h2>Quick Reference: Play Categories</h2>
+    <h2>Quick Start by Role</h2>
     <table>
-      <tr><th>Category</th><th>Plays</th><th>Goal</th></tr>
-      <tr><td><span class="tag tag-green">GROWTH</span></td><td>Green Health, Expansion Signals, Open Roles, Funding/News, Multi-Country, Referrals</td><td>Drive expansion revenue and advocacy</td></tr>
-      <tr><td><span class="tag tag-red">RISK</span></td><td>Yellow Health, Red Health, POC Change, Ticket Trends, Entity Setup</td><td>Prevent churn, rebuild trust, stabilize accounts</td></tr>
-      <tr><td><span class="tag tag-blue">LIFECYCLE</span></td><td>Backfill, Hiring Trends, QBR Scheduling, Holidays</td><td>Stay proactive through natural account milestones</td></tr>
-      <tr><td><span class="tag tag-purple">PRODUCTS</span></td><td>Annual Upfronts, Recruitment Services, Full Suite</td><td>Cross-sell and deepen product adoption</td></tr>
+      <tr><th>If You Are...</th><th>Start Here</th></tr>
+      <tr><td><strong>New hire, Day 1</strong></td><td>Program Overview > Phase 1: Foundation. Follow the 90-day ramp day by day.</td></tr>
+      <tr><td><strong>New hire, shadowing</strong></td><td>Phase 2: Shadowing. Use the Shadowing Log template on every call you observe.</td></tr>
+      <tr><td><strong>Ramped CSM, daily work</strong></td><td>Growth, Risk, and Lifecycle Plays. Use during or before client calls. Copy templates directly.</td></tr>
+      <tr><td><strong>Preparing for a QBR</strong></td><td>Schedule QBR play (L3) + Products section for cross-sell talking points.</td></tr>
+      <tr><td><strong>Dealing with a past-due client</strong></td><td>Collections play (R6). One touchpoint, report back to AR.</td></tr>
+      <tr><td><strong>Onboarding a new CSM (manager)</strong></td><td>Manager's Guide. Pre-hire checklist, buddy selection, coaching rhythm.</td></tr>
+      <tr><td><strong>Running weekly training</strong></td><td>Weekly Calendar. Full 12-month topic rotation with session formats.</td></tr>
     </table>
   </div>
 </div>
@@ -797,13 +1005,11 @@
       <li>Reduce client admin overhead and improve consistency</li>
       <li>Increase revenue per account</li>
     </ul>
-
     <h3>Risk</h3>
     <ul>
       <li>Lose EEs to competitor if they consolidate away from us</li>
       <li>Client may not see the value of switching providers for existing EEs</li>
     </ul>
-
     <h3>Actions</h3>
     <ol>
       <li><strong>Inquire about their full global hiring setup</strong> -- don't assume you know all vendors involved</li>
@@ -813,7 +1019,7 @@
   </div>
 
   <div class="card">
-    <h3>Messaging Templates</h3>
+    <h3>Messaging Template</h3>
     <div class="msg-template">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       I'd love to get a better sense of your global hiring setup. Are you currently working with multiple vendors or handling things region by region?<br><br>
@@ -843,19 +1049,15 @@
 
   <div class="card">
     <h3>Scenario A: US-Based Hiring</h3>
-
     <div class="callout callout-tip">
       <div class="callout-label">Opportunity</div>
-      <div class="callout-body">Start a conversation about global expansion. Position Remote People as a partner to scale hiring efforts globally and optimize costs and compliance.</div>
+      <div class="callout-body">Start a conversation about global expansion. Position Remote People as a partner to scale hiring and optimize costs.</div>
     </div>
-
     <div class="callout callout-risk">
       <div class="callout-label">Risk</div>
       <div class="callout-body">Customer may grow solely in the US with a local entity, missing global talent pools and cost savings.</div>
     </div>
-
     <p><strong>Action:</strong> Reach out to explore whether the customer is open to accessing global talent to reduce hiring costs and time-to-hire.</p>
-
     <div class="msg-template">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       Hi [Customer Name],<br><br>
@@ -867,19 +1069,15 @@
 
   <div class="card">
     <h3>Scenario B: Global Hiring</h3>
-
     <div class="callout callout-tip">
       <div class="callout-label">Opportunity</div>
       <div class="callout-body">Engage immediately to support compliance, speed, and cost-effectiveness in international hiring.</div>
     </div>
-
     <div class="callout callout-risk">
       <div class="callout-label">Risk</div>
       <div class="callout-body">Customer may be using another EOR or engaging talent in non-compliant ways (e.g., contractors where employment is more appropriate).</div>
     </div>
-
     <p><strong>Action:</strong> Watch for international job postings. Research internally to confirm if Remote People is involved. If not, explore why and how you can help.</p>
-
     <div class="msg-template">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       Hi [Customer Name],<br><br>
@@ -891,7 +1089,7 @@
   </div>
 </div>
 
-<!-- ==================== PLAY: FUNDING / MARKET NEWS ==================== -->
+<!-- ==================== PLAY: FUNDING ==================== -->
 <div class="section" id="play-funding">
   <div class="page-header">
     <div class="play-header">
@@ -912,7 +1110,6 @@
     <h3>Funding Round</h3>
     <p><strong>Opportunity:</strong> Seed and Series A rounds are typically used to grow teams and tech. Budget is unlocked.</p>
     <p><strong>Action:</strong> Research funding news. Congratulate and explore hiring plans.</p>
-
     <div class="msg-template">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       Hi [Customer Name],<br><br>
@@ -927,7 +1124,6 @@
     <h3>Market / Competitive News</h3>
     <p><strong>Opportunity:</strong> Position yourself as a strategic advisor who's watching the market on their behalf.</p>
     <p><strong>Action:</strong> Share relevant insights or updates and connect them to the client's hiring strategy.</p>
-
     <div class="msg-template">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       I saw [news article or competitor movement] and immediately thought of your team. Have you considered how this could impact your hiring plans or global footprint?
@@ -956,22 +1152,19 @@
   <div class="card">
     <h3>Opportunity</h3>
     <ul>
-      <li>Expand footprint into countries they're active in but not partnering with us</li>
-      <li>Simplify management -- EOR is clearly a key piece of their business strategy</li>
+      <li>Expand into countries they're active in but not partnering with us</li>
       <li>Use success in one country to suggest "copy-paste" strategy in similar markets</li>
     </ul>
-
     <h3>Risk</h3>
     <ul>
-      <li>Increased EE density in one country could signal future entity setup (Rule of 5)</li>
+      <li>Increased EE density in one country could signal entity setup (Rule of 5)</li>
       <li>They may be working with competitors in countries we don't know about</li>
     </ul>
-
     <h3>Actions</h3>
     <ol>
       <li>Ask about countries not currently managed by Remote People</li>
       <li>Explore countries they'd like to break into</li>
-      <li>Share insights on similar hiring markets (e.g., "Customers hiring in Mexico often also succeed in Colombia or Argentina")</li>
+      <li>Share insights on similar hiring markets</li>
     </ol>
   </div>
 
@@ -981,8 +1174,7 @@
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       I noticed we're supporting your team in [X, Y, Z countries]. Curious -- are there other markets where you're active but not currently partnering with us?
     </div>
-
-    <div class="msg-template" style="margin-top: 16px;">
+    <div class="msg-template" style="margin-top: 14px;">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       Your team's growth in [Country] has been great to watch -- it's a clear signal you're doing something right!<br><br>
       Given your current growth, have you considered replicating the approach in other regions? There are a few countries where we can help you access similar talent profiles with lower cost and reduced employer burden. Happy to share some recommendations.<br><br>
@@ -1014,22 +1206,18 @@
     <ul>
       <li>Expand pipeline through warm introductions</li>
       <li>Build customer advocacy and long-term loyalty</li>
-      <li>Higher quality prospects who already trust the referrer</li>
     </ul>
-
     <h3>Risk</h3>
     <ul>
-      <li>Waiting too long and missing the momentum of customer satisfaction</li>
+      <li>Waiting too long and missing the momentum</li>
       <li>Asking too early (before value is felt) weakens the relationship</li>
-      <li>Referrals go to competitors if you don't ask</li>
     </ul>
-
     <h3>Actions</h3>
     <ol>
-      <li>Identify referral-ready customers (Green health, recent success, NPS promoters, post-QBR moments, expansions)</li>
+      <li>Identify referral-ready customers</li>
       <li>Ask during moments of high value or gratitude</li>
       <li>Make the ask specific, low-effort, and personalized</li>
-      <li>Follow up with gratitude, status updates, and appreciation</li>
+      <li>Follow up with gratitude and appreciation</li>
     </ol>
   </div>
 
@@ -1039,14 +1227,12 @@
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       Hi [Customer Name],<br><br>
       I've really enjoyed seeing how your team has grown in [country/countries]. Your journey is a great example of how global hiring can work when done right.<br><br>
-      We've been growing our team to enable a wider range of global services, and I'm starting to speak with others just beginning to explore international hiring.<br><br>
       If there's anyone in your network who's curious about how to scale globally, your endorsement would carry significant weight, and I would be grateful for any referrals you could provide.<br><br>
-      As a thank you, we'd be happy to offer you 10% off one month of service fees (max $1,500) once your referral makes their first hire. But more than anything, we just appreciate your support.<br><br>
+      As a thank you, we'd be happy to offer you 10% off one month of service fees (max $1,500) once your referral makes their first hire.<br><br>
       Thanks for being such a thoughtful partner.
     </div>
     <div class="msg-channel">Channel: Email or Call</div>
-
-    <div class="callout callout-tip" style="margin-top: 16px;">
+    <div class="callout callout-tip" style="margin-top: 14px;">
       <div class="callout-label">Referral Incentive</div>
       <div class="callout-body">10% off one month of service fees (max $1,500) once the referral makes their first hire.</div>
     </div>
@@ -1077,14 +1263,11 @@
       <li>Deepen the relationship with proactive support</li>
       <li>Uncover blockers early and demonstrate value</li>
     </ul>
-
     <h3>Risk</h3>
     <ul>
       <li>Customer is unsure of long-term fit</li>
-      <li>Momentum is slowing, leading to possible disengagement</li>
       <li>One bad experience could tip the balance toward churn</li>
     </ul>
-
     <h3>Actions</h3>
     <ol>
       <li><strong>Schedule a check-in</strong> to explore friction points</li>
@@ -1130,16 +1313,13 @@
     <ul>
       <li>Rebuild trust and realign quickly before churn</li>
       <li>Identify root causes and implement a turnaround plan</li>
-      <li>Demonstrate accountability and high-touch support</li>
     </ul>
-
     <h3>Risk</h3>
     <ul>
       <li>Churn is imminent if action isn't taken</li>
-      <li>Customer may be evaluating competitors or already transitioning away</li>
-      <li>Reputation risk if poor experience is shared internally or externally</li>
+      <li>Customer may already be evaluating competitors or transitioning away</li>
+      <li>Reputation risk if poor experience is shared externally</li>
     </ul>
-
     <h3>Actions</h3>
     <ol>
       <li><strong>Escalate internally</strong> for exec visibility and support</li>
@@ -1160,8 +1340,7 @@
       Alternatively, my calendar [HERE] is updated -- feel free to book a time that works best.
     </div>
     <div class="msg-channel">Channel: Video Call + follow-up email summary</div>
-
-    <div class="callout callout-warn" style="margin-top: 16px;">
+    <div class="callout callout-warn" style="margin-top: 14px;">
       <div class="callout-label">Escalation Required</div>
       <div class="callout-body">Red health accounts with renewal within 90 days must be escalated to Head of CS with a risk brief: ARR at risk, root cause, recovery actions taken, and recommended exec intervention.</div>
     </div>
@@ -1188,17 +1367,15 @@
   <div class="card">
     <h3>Opportunity</h3>
     <p>Rebuild trust and establish yourself as a strategic partner to the new contact.</p>
-
     <h3>Risk</h3>
     <p>Lose influence, or new POC prefers other vendors. 30 to 40% of churned accounts had a POC change in the prior 6 months.</p>
-
     <h3>Actions</h3>
     <ol>
       <li><strong>Respond within 24 hours</strong> of the introduction</li>
-      <li><strong>Research the new POC</strong> on LinkedIn (background, communication style signals)</li>
-      <li><strong>Prepare a one-page account summary</strong> (EEs, countries, products, key dates, open items, recent wins)</li>
+      <li><strong>Research the new POC</strong> on LinkedIn</li>
+      <li><strong>Prepare a one-page account summary</strong></li>
       <li><strong>Schedule an onboarding call</strong> within 5 business days</li>
-      <li><strong>Listen first (60%)</strong>, share account summary (20%), establish communication preferences (20%)</li>
+      <li><strong>Listen first (60%)</strong>, share account summary (20%), establish preferences (20%)</li>
     </ol>
   </div>
 
@@ -1232,11 +1409,9 @@
 
   <div class="card">
     <h3>Opportunity</h3>
-    <p>Proactively address root causes, improve CSAT and retention. Show the client you're monitoring their experience.</p>
-
+    <p>Proactively address root causes, improve CSAT and retention.</p>
     <h3>Risk</h3>
-    <p>Persistent issues cause churn or loss of trust. Unaddressed tickets erode the relationship silently.</p>
-
+    <p>Persistent issues cause churn or loss of trust.</p>
     <h3>Actions</h3>
     <ol>
       <li><strong>Analyze tickets</strong> -- pull volume, categories, resolution times, repeat issues</li>
@@ -1256,7 +1431,7 @@
   </div>
 </div>
 
-<!-- ==================== PLAY: ENTITY SETUP RISK ==================== -->
+<!-- ==================== PLAY: ENTITY SETUP ==================== -->
 <div class="section" id="play-entity">
   <div class="page-header">
     <div class="play-header">
@@ -1276,20 +1451,17 @@
   <div class="card">
     <h3>Opportunity</h3>
     <ul>
-      <li>Proactively offer support with global payroll and value-added services (office setup, IT provisioning) to retain revenue</li>
-      <li>Position Remote People as a partner beyond EOR -- entity setup fast track, ongoing payroll, compliance support</li>
-      <li>Remain embedded as a partner even as the relationship evolves</li>
+      <li>Offer global payroll, office setup, IT provisioning to retain revenue</li>
+      <li>Position Remote People as a partner beyond EOR</li>
     </ul>
-
     <h3>Risk</h3>
-    <p>Customer transitions away completely after setting up their own entity, leading to loss of headcount and revenue.</p>
-
+    <p>Customer transitions away completely, losing headcount and revenue.</p>
     <h3>Actions</h3>
     <ol>
       <li><strong>Reach out when entity setup is confirmed or suspected</strong></li>
-      <li><strong>Offer continued support</strong> -- global payroll, office setup, IT provisioning</li>
-      <li><strong>Walk them through the entity setup fast track program</strong></li>
-      <li><strong>For multi-country accounts</strong>, reinforce value of EOR in countries where entity doesn't make sense</li>
+      <li><strong>Offer continued support</strong> -- global payroll, VAS, compliance</li>
+      <li><strong>Walk them through entity setup fast track program</strong></li>
+      <li><strong>Reinforce EOR value</strong> in countries where entity doesn't make sense</li>
     </ol>
   </div>
 
@@ -1306,6 +1478,127 @@
   </div>
 </div>
 
+<!-- ==================== PLAY: COLLECTIONS ==================== -->
+<div class="section" id="play-collections">
+  <div class="page-header">
+    <div class="play-header">
+      <div class="play-number" style="background: var(--red-light); color: var(--red);">R6</div>
+      <div>
+        <h1>Collections (Past Due Invoices)</h1>
+        <p class="subtitle">Your role, your one touchpoint, and exactly what to say</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-risk">
+    <div class="callout-label">Trigger</div>
+    <div class="callout-body">AR flags you in Slack around Day 7 past due: "No response from [Client]. Can you do a quick check-in?" This is your one touchpoint.</div>
+  </div>
+
+  <div class="card">
+    <h2>How Collections Works</h2>
+    <p>AR/Collections owns the entire collections cadence. They send the reminders, track the status, enforce late fees, escalate, and trigger offboarding. That is their job.</p>
+    <p><strong>Your role is one specific moment:</strong> when AR has sent two reminders and gotten no response (around day 7 past due), they will flag you in Slack and ask you to do a quick personal check-in with the client. That is it. One touchpoint, then AR takes it back.</p>
+
+    <div class="callout callout-tip">
+      <div class="callout-label">Why Your One Touch Matters</div>
+      <div class="callout-body">You have a relationship with this client. A quick personal message from you will get a response faster than a fifth AR email ever will. You are not chasing money. You are opening a door that AR cannot open on their own.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The Process: Step by Step</h2>
+    <table>
+      <tr><th>When</th><th>What Happens</th><th>Your Role</th></tr>
+      <tr><td><strong>Day -5</strong></td><td>Upflow sends automated reminder to client</td><td>None. You are copied for awareness.</td></tr>
+      <tr><td><strong>Day -1</strong></td><td>Upflow sends second reminder with payment link</td><td>None. You are copied.</td></tr>
+      <tr><td><strong>Day +3</strong></td><td>Upflow alerts AR team that invoice is past due</td><td>None. AR begins their outreach.</td></tr>
+      <tr><td style="background: var(--red-light);"><strong>Day +7</strong></td><td style="background: var(--red-light);">AR flags you in Slack: "No response from [Client]. Can you do a quick check-in?"</td><td style="background: var(--red-light);"><strong>YOUR ONE TOUCH.</strong> See messaging below.</td></tr>
+      <tr><td><strong>Day +8</strong></td><td>You report back to AR what you learned</td><td>Quick Slack reply with the outcome.</td></tr>
+      <tr><td><strong>Day 8 to 60</strong></td><td>AR handles all follow-ups, late fees, escalation</td><td>None. AR owns the cadence.</td></tr>
+      <tr><td><strong>Day 60+</strong></td><td>Offboarding triggered if unresolved (VP Ops approves)</td><td>You are informed. You do not execute.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Your One Touch: What to Say</h2>
+    <p>When AR flags you, reach out personally and find out what is going on. Use whatever channel is most natural for that client: email, WhatsApp, a phone call, or all three.</p>
+
+    <h3>Option A: Email</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      <strong>Subject: Quick heads up on your account</strong><br><br>
+      Hi [First Name],<br><br>
+      I wanted to reach out personally. I noticed there is an outstanding invoice on your account ([#INV-XXXX] for [amount], due [date]), and I want to make sure nothing on our end is causing a hold-up.<br><br>
+      Is there anything going on I should know about? A PO issue, a question on the invoice, a change in your AP process? Happy to help sort it out if so.<br><br>
+      Just wanted to flag it before it turns into a bigger thing for either of us.<br><br>
+      Thanks,<br>
+      [Your Name]
+    </div>
+    <div class="msg-channel">Channel: Email</div>
+
+    <h3>Option B: WhatsApp or Text</h3>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Hey [First Name], hope you are well. Quick heads up -- there is an invoice on your account that is a bit overdue and I wanted to flag it before it gets escalated. Anything holding it up on your end? Happy to help if so.
+    </div>
+    <div class="msg-channel">Channel: WhatsApp / Text</div>
+
+    <h3>Option C: Phone Call</h3>
+    <div class="callout callout-purple">
+      <div class="callout-label">Sandler Approach: Pain Discovery</div>
+      <div class="callout-body">"Hey [Name], I noticed an invoice came up as overdue on your account. I am sure there is a reason for it. Help me understand what is going on so I can figure out if there is something I need to fix on my end."<br><br>This positions you as a partner, not a collector. It gives the client permission to share what is really happening. Listen, take notes, and relay what you learn to AR.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Reporting Back to AR</h2>
+    <p>After your touchpoint, reply to the AR Slack flag within 24 hours. Keep it simple. AR just needs three things:</p>
+    <table>
+      <tr><th>Tell AR</th><th>Example</th></tr>
+      <tr><td><strong>Did they respond?</strong></td><td>"Spoke with Jane. She responded same day."</td></tr>
+      <tr><td><strong>What is the blocker?</strong></td><td>"AP team changed. New contact is finance@acme.com. Invoice needs to be re-sent."</td></tr>
+      <tr><td><strong>Any commitment?</strong></td><td>"She said payment will be processed by March 15. No disputes."</td></tr>
+    </table>
+    <p style="margin-top: 12px;"><strong>If you got no response:</strong> that is useful information too. Tell AR: "Tried email and WhatsApp, no response. Recommend AR continues the cadence." Then you are done.</p>
+  </div>
+
+  <div class="card">
+    <h2>Boundaries: What Is and Is Not Your Job</h2>
+    <table>
+      <tr><th>Your Job</th><th>Not Your Job</th></tr>
+      <tr><td>One personal check-in when AR flags you</td><td>Sending multiple follow-up emails about payment</td></tr>
+      <tr><td>Finding out what is blocking payment</td><td>Negotiating payment plans or late fee waivers</td></tr>
+      <tr><td>Reporting back to AR within 24 hours</td><td>Tracking the account through the full cadence</td></tr>
+      <tr><td>Being a bridge between the client and AR</td><td>Sending contract breach or escalation warnings</td></tr>
+      <tr><td>Providing context if offboarding is triggered</td><td>Contacting employees or discussing severance</td></tr>
+      <tr><td>Staying professional if the client reaches out to you</td><td>Promising to reverse or delay the collections process</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>If an Account Reaches Offboarding</h2>
+    <p>If a client is unresponsive after the full AR cadence, the Collections team may trigger offboarding (approved by VP Ops). You will be informed in #collections-offboarding. You do not execute any part of the offboarding process.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-label">One Exception</div>
+      <div class="callout-body">Juan C. may ask you to send the final client notice before offboarding begins. If that happens, he will give you the specific instructions and copy. Do not send anything on your own.</div>
+    </div>
+
+    <h3>If the Client Reaches Out During Offboarding</h3>
+    <p>Acknowledge their message and route them to the right team:</p>
+    <div class="msg-template">
+      <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+      Thank you for reaching out. The process has moved to our collections team at this point. Let me connect you with the right people to see what options are available.
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">The Bottom Line</div>
+    <div class="callout-body">You are not a collector. You are the person with the relationship. AR needs you for one thing: opening a door they cannot open. Do that well, report back, and let them handle the rest. Your time is better spent on renewals, expansions, and keeping your healthy clients happy.</div>
+  </div>
+</div>
+
 <!-- ==================== PLAY: BACKFILL ==================== -->
 <div class="section" id="play-backfill">
   <div class="page-header">
@@ -1313,7 +1606,7 @@
       <div class="play-number" style="background: var(--yellow-light); color: var(--yellow);">L1</div>
       <div>
         <h1>Backfill / Offboarding</h1>
-        <p class="subtitle">Involuntary/voluntary resignations, contract expiration</p>
+        <p class="subtitle">Resignations, contract expiration</p>
       </div>
     </div>
   </div>
@@ -1325,14 +1618,12 @@
 
   <div class="card">
     <h3>Opportunity</h3>
-    <p>Help replace roles quickly and improve retention. Position recruitment services.</p>
-
+    <p>Help replace roles quickly and position recruitment services.</p>
     <h3>Risk</h3>
     <p>Gaps filled by competitors or role transitions to direct entities.</p>
-
     <h3>Actions</h3>
     <ol>
-      <li><strong>Watch for end dates and resignations</strong> -- be proactive about next steps</li>
+      <li><strong>Watch for end dates and resignations</strong></li>
       <li><strong>Ask about backfill plans</strong> before the client starts looking elsewhere</li>
       <li><strong>Position recruitment services</strong> (98% placement success rate)</li>
     </ol>
@@ -1345,8 +1636,7 @@
       <strong>Contract Expiring:</strong><br>
       I noticed [employee]'s fixed contract is soon to expire. Has [EE name] been a success for your team? Will you be extending the contract or do you already have a backfill plan? Happy to help keep things moving seamlessly.
     </div>
-
-    <div class="msg-template" style="margin-top: 16px;">
+    <div class="msg-template" style="margin-top: 14px;">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       <strong>Employee Departed:</strong><br>
       I noticed [EE name] is no longer in your roster. Do you already have a backfill plan, or would you like help sourcing potential candidates? We have a 98% placement success rate.
@@ -1373,27 +1663,21 @@
   </div>
 
   <div class="card">
-    <h3>Actions</h3>
-    <p>Track headcount and hiring pattern changes. Tailor your outreach based on the trend.</p>
-
     <h3>Messaging by Scenario</h3>
-
     <div class="msg-template">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       <strong>Growth detected:</strong><br>
       I noticed an uptick in hiring in [region/country]. Are there any big initiatives underway that we can support?
     </div>
-
-    <div class="msg-template" style="margin-top: 16px;">
+    <div class="msg-template" style="margin-top: 14px;">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       <strong>Decline detected:</strong><br>
       I noticed a slowdown in hiring in [region/country]. Is there a shift in priorities or any changes we should be aware of? Let me know if there's anything we can do to support.
     </div>
-
-    <div class="msg-template" style="margin-top: 16px;">
+    <div class="msg-template" style="margin-top: 14px;">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       <strong>Stable / small account:</strong><br>
-      It seems like everything has been flowing smoothly for your [X] EEs in [Countries]. We recently launched a new payment option for customers and thought it may be beneficial to you.<br><br>
+      It seems like everything has been flowing smoothly for your [X] EEs in [Countries]. We recently launched a new payment option and thought it may be beneficial to you.<br><br>
       Instead of managing monthly invoices and recurring bank fees, you can now pay for your EOR employee seats annually and unlock several financial and operational benefits.
     </div>
     <div class="msg-channel">Channel: Email, then Check-in / QBR call</div>
@@ -1414,31 +1698,27 @@
 
   <div class="callout callout-trigger">
     <div class="callout-label">Trigger</div>
-    <div class="callout-body">Quarterly cadence for Tier 1, semi-annual for Tier 2. Also triggered for at-risk accounts or accounts with low recent engagement.</div>
+    <div class="callout-body">Quarterly cadence for Tier 1, semi-annual for Tier 2. Also triggered for at-risk or low-engagement accounts.</div>
   </div>
 
   <div class="card">
     <h3>Opportunity</h3>
     <ul>
-      <li>Strengthen strategic alignment and customer trust</li>
-      <li>Showcase value delivered to date</li>
-      <li>Uncover growth, retention, or upsell opportunities</li>
+      <li>Strengthen strategic alignment and trust</li>
+      <li>Showcase value delivered</li>
+      <li>Uncover growth or upsell opportunities</li>
       <li>Reignite engagement with less active accounts</li>
-      <li>Gather feedback that shapes product/service improvements</li>
     </ul>
-
     <h3>Risk</h3>
     <ul>
-      <li>Lack of visibility into sentiment may lead to silent churn</li>
-      <li>Stakeholders may not see the value of the meeting if poorly prepared</li>
-      <li>Missed opportunity to correct issues or prevent quiet disengagement</li>
+      <li>Lack of visibility into sentiment leads to silent churn</li>
+      <li>Missed opportunity to correct issues early</li>
     </ul>
-
     <h3>Actions</h3>
     <ol>
-      <li>Schedule proactively (quarterly or semi-annually by tier)</li>
+      <li>Schedule proactively by tier cadence</li>
       <li>Use a structured, value-driven agenda</li>
-      <li>Prepare personalized insights and outcomes ahead of time</li>
+      <li>Prepare personalized insights ahead of time</li>
       <li>Realign on goals, capture feedback, define next steps</li>
     </ol>
   </div>
@@ -1449,7 +1729,7 @@
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       As part of our ongoing commitment to your success, let's schedule your next Quarterly Business Review.<br><br>
       This session is a chance for us to reflect on how things have gone so far, hear what's happening in your world, share what's new on our side, and plan for what's next. Promise it will be worth your time.<br><br>
-      Could you let me know your availability in the next 2 weeks? I'm happy to accommodate what works best. If you prefer, you can schedule directly [here].
+      Could you let me know your availability in the next 2 weeks? If you prefer, you can schedule directly [here].
     </div>
     <div class="msg-channel">Channel: Email or Call</div>
   </div>
@@ -1475,7 +1755,6 @@
   <div class="card">
     <h3>Action</h3>
     <p>Send good wishes on local holidays or special events. Quick touch, no ask.</p>
-
     <div class="msg-template">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       Happy [Holiday]! Wishing you and your team in [country] a wonderful celebration.
@@ -1498,23 +1777,20 @@
 
   <div class="card">
     <h3>What It Is</h3>
-    <p>Remote People's Annual Billing Option allows customers to prepay for 12 months of EOR service fees per employee. Seats are prepaid and can be reused if an employee leaves during the term. Customers receive a <strong>10% discount</strong> (equivalent to 1 month free). Recruitment services available for sourcing replacements.</p>
-
+    <p>Prepay for 12 months of EOR service fees per employee. Seats are reusable if an employee leaves. <strong>10% discount</strong> (equivalent to 1 month free). Recruitment support included for replacements.</p>
     <h3>Who It's For</h3>
     <ul>
-      <li>Customers planning to retain EOR employee(s) for 12+ months</li>
-      <li>Companies operating long-term in one or more countries</li>
-      <li>Customers seeking budget predictability</li>
+      <li>Customers retaining EOR employee(s) for 12+ months</li>
+      <li>Companies seeking budget predictability</li>
       <li>Accounts influenced by procurement or finance teams</li>
     </ul>
-
     <h3>When to Bring It Up</h3>
     <table>
       <tr><th>Trigger</th><th>Example</th></tr>
       <tr><td><strong>QBR / Check-in</strong></td><td>Long-term hiring or retention discussions</td></tr>
       <tr><td><strong>Expansion</strong></td><td>Multiple hires in a country</td></tr>
       <tr><td><strong>Budgeting</strong></td><td>Procurement or finance joins the call</td></tr>
-      <tr><td><strong>Offboarding</strong></td><td>A seat becomes available due to employee departure</td></tr>
+      <tr><td><strong>Offboarding</strong></td><td>A seat becomes available</td></tr>
     </table>
   </div>
 
@@ -1524,9 +1800,8 @@
       <tr><th>For Customer</th><th>For Us</th></tr>
       <tr><td>One invoice instead of monthly cycles</td><td>Revenue assurance</td></tr>
       <tr><td>Predictable annual budgeting</td><td>Lower churn risk</td></tr>
-      <tr><td>Locked pricing for 12 months</td><td>Stronger customer commitment</td></tr>
+      <tr><td>Locked pricing for 12 months</td><td>Stronger commitment</td></tr>
       <tr><td>Free EE replacement if offboarded</td><td></td></tr>
-      <tr><td>Access to recruitment support</td><td></td></tr>
     </table>
   </div>
 
@@ -1534,10 +1809,10 @@
     <h3>CSM Actions</h3>
     <table>
       <tr><th>Action</th><th>What</th></tr>
-      <tr><td><strong>Ask</strong></td><td>"Are you planning to keep your EOR employee(s) for 12+ months?" / "Would a single annual payment simplify procurement?"</td></tr>
-      <tr><td><strong>Check</strong></td><td>Growth plans, team stability, procurement involvement, budgeting timeline</td></tr>
-      <tr><td><strong>Share</strong></td><td>"Annual pricing saves you 1 month free of service fees and simplifies billing."</td></tr>
-      <tr><td><strong>Escalate</strong></td><td>Alex Hayman (invoice setup), Recruitment team (backfill support)</td></tr>
+      <tr><td><strong>Ask</strong></td><td>"Planning to keep your EOR employee(s) for 12+ months?" / "Would annual payment simplify procurement?"</td></tr>
+      <tr><td><strong>Check</strong></td><td>Growth plans, team stability, procurement involvement</td></tr>
+      <tr><td><strong>Share</strong></td><td>"Annual pricing saves you 1 month free and simplifies billing."</td></tr>
+      <tr><td><strong>Escalate</strong></td><td>Alex Hayman (invoice setup), Recruitment team (backfill)</td></tr>
       <tr><td><strong>Track</strong></td><td>CRM + Annual Contract Tracker.xlsx</td></tr>
     </table>
   </div>
@@ -1551,10 +1826,9 @@
       Open to discussing this, or would you prefer I share some info with your team first?
     </div>
     <div class="msg-channel">Channel: Email</div>
-
-    <h3 style="margin-top: 20px;">Process Steps &amp; Owners</h3>
+    <h3 style="margin-top: 18px;">Process Steps &amp; Owners</h3>
     <table>
-      <tr><th>Action</th><th>Primary Owner</th><th>Stakeholders</th></tr>
+      <tr><th>Action</th><th>Owner</th><th>Stakeholders</th></tr>
       <tr><td>Fill Annual Pricing Tracker</td><td>AE / CSM</td><td>Juan Correa, Neema Ardebili</td></tr>
       <tr><td>Notify team via email</td><td>AE / CSM</td><td>Alex, Carlos, Jody, Lina</td></tr>
       <tr><td>Set up annual invoice</td><td>Alex Hayman</td><td></td></tr>
@@ -1572,31 +1846,22 @@
       <div class="play-number" style="background: var(--blue-light); color: var(--blue);">P2</div>
       <div>
         <h1>Recruitment Services</h1>
-        <p class="subtitle">Find, vet, and place top-tier talent across 150+ countries</p>
+        <p class="subtitle">Find, vet, and place talent across 150+ countries</p>
       </div>
     </div>
   </div>
 
   <div class="card">
     <h3>What It Is</h3>
-    <p>Remote People's Recruitment Services help customers find, vet, and place top-tier talent across 150+ countries. We offer curated candidate shortlists, fast turnaround, and deep expertise in local markets.</p>
-
-    <h3>Who It's For</h3>
-    <ul>
-      <li>Customers with employees across multiple countries</li>
-      <li>Customers hiring multiple roles in one country</li>
-      <li>Teams with lean HR or no internal recruiters</li>
-      <li>Customers with open roles for more than 15 days</li>
-    </ul>
-
+    <p>Curated candidate shortlists, fast turnaround, deep local market expertise. 98% placement success rate.</p>
     <h3>When to Bring It Up</h3>
     <table>
       <tr><th>Trigger</th><th>What to Listen For</th></tr>
       <tr><td><strong>Onboarding</strong></td><td>"We need to hire quickly" / "We have no recruiters"</td></tr>
       <tr><td><strong>QBR / Check-in</strong></td><td>Growth plans or hiring pipeline review</td></tr>
       <tr><td><strong>Job Postings</strong></td><td>New roles on LinkedIn or local job boards</td></tr>
-      <tr><td><strong>Turnover</strong></td><td>Resignations, terminations, or mutual exits</td></tr>
-      <tr><td><strong>Funding News</strong></td><td>Post-raise hiring plans or team expansion</td></tr>
+      <tr><td><strong>Turnover</strong></td><td>Resignations, terminations, mutual exits</td></tr>
+      <tr><td><strong>Funding News</strong></td><td>Post-raise hiring plans</td></tr>
     </table>
   </div>
 
@@ -1604,16 +1869,16 @@
     <h3>CSM Actions</h3>
     <table>
       <tr><th>Action</th><th>What</th></tr>
-      <tr><td><strong>Ask</strong></td><td>"Do you have open roles you've struggled to fill?" / "Would it help to have locally vetted candidates fast?"</td></tr>
-      <tr><td><strong>Check</strong></td><td>Open roles, hiring trends, headcount growth, country-level needs, hard-to-hire roles</td></tr>
-      <tr><td><strong>Share</strong></td><td>"We've placed 98% of roles within 2 weeks" / "You'll get a pre-vetted shortlist in under 7 days in [Country]"</td></tr>
-      <tr><td><strong>Escalate</strong></td><td>To the Recruitment Team for scoping or candidate delivery</td></tr>
-      <tr><td><strong>Track</strong></td><td>Hiring progress in OKR tracker or CRM notes</td></tr>
+      <tr><td><strong>Ask</strong></td><td>"Do you have open roles you've struggled to fill?"</td></tr>
+      <tr><td><strong>Check</strong></td><td>Open roles, hiring trends, headcount growth, hard-to-hire roles</td></tr>
+      <tr><td><strong>Share</strong></td><td>"Pre-vetted shortlist in under 7 days in [Country]"</td></tr>
+      <tr><td><strong>Escalate</strong></td><td>To the Recruitment Team for scoping</td></tr>
+      <tr><td><strong>Track</strong></td><td>OKR tracker or CRM notes</td></tr>
     </table>
   </div>
 
   <div class="card">
-    <h3>Messaging Templates</h3>
+    <h3>Messaging Template</h3>
     <div class="msg-template">
       <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
       <strong>Subject: Can we help you fill those roles faster?</strong><br><br>
@@ -1622,18 +1887,10 @@
       Worth a chat?
     </div>
     <div class="msg-channel">Channel: Email or LinkedIn</div>
-
-    <div class="callout callout-tip" style="margin-top: 16px;">
+    <div class="callout callout-tip" style="margin-top: 14px;">
       <div class="callout-label">QBR Talking Point</div>
       <div class="callout-body">"How are your hiring efforts going in [region]? Would you like us to help source candidates to speed things up?"</div>
     </div>
-
-    <h3 style="margin-top: 20px;">Enablement Aids</h3>
-    <ul>
-      <li>Recruitment Services Overview PDF</li>
-      <li>Selling Countries PDF</li>
-      <li>CSM Quick FAQ for Recruitment</li>
-    </ul>
   </div>
 </div>
 
@@ -1652,65 +1909,961 @@
   <div class="card">
     <table>
       <tr><th>Product</th><th>What It Does</th><th>Ideal For</th></tr>
-      <tr><td><strong>Employer of Record (EOR)</strong></td><td>Hire and manage employees in 130+ countries without local entities</td><td>Any customer hiring internationally</td></tr>
-      <tr><td><strong>Global Payroll</strong></td><td>Consolidated multi-country payroll through a single platform</td><td>Customers with 5+ countries, managing payroll separately</td></tr>
-      <tr><td><strong>Entity Setup</strong></td><td>Establish legal entities in new markets with full compliance support</td><td>Customers with high EE concentration in one country (10+)</td></tr>
-      <tr><td><strong>Recruitment</strong></td><td>Source and hire talent in new markets through local recruiting networks</td><td>Lean HR teams, open roles 15+ days, new market entries</td></tr>
-      <tr><td><strong>Global Mobility</strong></td><td>Employee relocation and visa support for international transfers</td><td>Customers moving employees between countries</td></tr>
-      <tr><td><strong>Value-Added Services (VAS)</strong></td><td>Equipment procurement, coworking access, benefits enhancement</td><td>Distributed teams needing local infrastructure support</td></tr>
+      <tr><td><strong>EOR</strong></td><td>Hire and manage employees in 130+ countries without local entities</td><td>Any customer hiring internationally</td></tr>
+      <tr><td><strong>Global Payroll</strong></td><td>Consolidated multi-country payroll, single platform</td><td>5+ countries, managing payroll separately</td></tr>
+      <tr><td><strong>Entity Setup</strong></td><td>Establish legal entities with full compliance support</td><td>High EE concentration in one country (10+)</td></tr>
+      <tr><td><strong>Recruitment</strong></td><td>Source and hire talent through local networks</td><td>Lean HR teams, open roles 15+ days</td></tr>
+      <tr><td><strong>Global Mobility</strong></td><td>Relocation and visa support for international transfers</td><td>Employees moving between countries</td></tr>
+      <tr><td><strong>VAS</strong></td><td>Equipment, coworking, benefits enhancement</td><td>Distributed teams needing local infrastructure</td></tr>
     </table>
-
-    <div class="callout callout-tip" style="margin-top: 16px;">
+    <div class="callout callout-tip" style="margin-top: 14px;">
       <div class="callout-label">Internal Notes (to update)</div>
       <div class="callout-body">
-        Global Payroll: Open to every country -- we can take up to 10 requests a month.<br>
-        QBR talking points and objection management: [link needed]<br>
+        Global Payroll: Open to every country -- up to 10 requests/month.<br>
+        QBR objection management: [link needed]<br>
         Brochure: [in development]<br>
-        Entity setup proposal: create pressure to Henri -- target 10 customers.
+        Entity setup proposal: target 10 customers for Henri.
       </div>
     </div>
   </div>
 </div>
 
+<!-- ==================== OVERVIEW ==================== -->
+<div class="section" id="tr-overview">
+  <div class="page-header">
+    <h1>CSM Training Program</h1>
+    <p class="subtitle">90-day new hire ramp + ongoing weekly enablement</p>
+    <div class="last-updated">Updated: March 2026</div>
+  </div>
+
+  <div class="card">
+    <h2>Program Summary</h2>
+    <p>This program takes a new CSM from zero to fully ramped in 90 days, then keeps the entire team sharp through weekly training sessions. It's built specifically for Remote People's EOR business, our account tiers, our tools, and the way our team actually works.</p>
+
+    <table>
+      <tr><th>Component</th><th>Duration</th><th>Audience</th><th>Goal</th></tr>
+      <tr><td><strong>Phase 1: Foundation</strong></td><td>Weeks 1 to 2</td><td>New hires</td><td>Understand Remote People, EOR industry, tools, and team</td></tr>
+      <tr><td><strong>Phase 2: Shadowing</strong></td><td>Weeks 3 to 4</td><td>New hires</td><td>Observe real client interactions, learn by watching</td></tr>
+      <tr><td><strong>Phase 3: Guided Practice</strong></td><td>Weeks 5 to 8</td><td>New hires</td><td>Run client calls with buddy support, own first accounts</td></tr>
+      <tr><td><strong>Phase 4: Independence</strong></td><td>Weeks 9 to 12</td><td>New hires</td><td>Manage full book independently, pass certification</td></tr>
+      <tr><td><strong>Weekly Training</strong></td><td>Ongoing</td><td>All CSMs</td><td>Continuous skill development, knowledge sharing, role play</td></tr>
+    </table>
+
+    <div class="progress-track">
+      <div class="progress-segment filled"></div>
+      <div class="progress-segment filled"></div>
+      <div class="progress-segment filled"></div>
+      <div class="progress-segment filled"></div>
+      <div class="progress-segment filled"></div>
+      <div class="progress-segment filled"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+    </div>
+    <div class="progress-label">
+      <span>Foundation</span>
+      <span>Shadowing</span>
+      <span>Guided Practice</span>
+      <span>Independence</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Who Owns What</h2>
+    <table>
+      <tr><th>Role</th><th>Responsibility</th></tr>
+      <tr><td><strong>Head of CS (Juan)</strong></td><td>Program design, milestone sign-offs, certification approval, ongoing calendar ownership</td></tr>
+      <tr><td><strong>CS Lead / Senior CSM</strong></td><td>Buddy system lead, shadowing partner, call reviews, day-to-day coaching</td></tr>
+      <tr><td><strong>New CSM</strong></td><td>Complete all modules, meet milestone criteria, own their learning</td></tr>
+      <tr><td><strong>Support Team Lead</strong></td><td>Ticket workflow training, escalation process walkthrough</td></tr>
+      <tr><td><strong>Sales / AE</strong></td><td>Handoff process training, joint call observation</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== PHILOSOPHY ==================== -->
+<div class="section" id="tr-philosophy">
+  <div class="page-header">
+    <h1>Training Philosophy</h1>
+    <p class="subtitle">The principles behind how we build CSMs at Remote People</p>
+  </div>
+
+  <div class="card">
+    <h2>Core Beliefs</h2>
+
+    <h3>1. CSMs are commercial, not just relational</h3>
+    <p>Every CSM at Remote People is expected to identify expansion opportunities, protect revenue, and drive commercial outcomes. We don't separate "relationship management" from "revenue management" because they're the same thing done well. Training reflects this from day one.</p>
+
+    <h3>2. EOR knowledge is a competitive advantage</h3>
+    <p>Any CSM can learn Sandler methodology or HubSpot workflows. What makes our team different is deep understanding of the EOR industry: compliance, entity economics, country-specific nuances, and competitive positioning. We invest disproportionately in EOR-specific training.</p>
+
+    <h3>3. Practice beats theory</h3>
+    <p>We don't do death-by-PowerPoint training. Every session includes hands-on practice: role plays, live call reviews, scenario walkthroughs, or real account analysis. If someone can't apply it to a real account the same week, the training failed.</p>
+
+    <h3>4. The team teaches the team</h3>
+    <p>Senior CSMs lead sessions, share war stories, and mentor new hires. This scales knowledge, builds leadership skills, and keeps training grounded in reality rather than theory.</p>
+
+    <h3>5. Feedback is immediate and specific</h3>
+    <p>We don't wait for quarterly reviews to tell someone how they're doing. Call reviews happen weekly. Feedback is specific, actionable, and delivered with care. We use QA scorecards so feedback is objective, not personal.</p>
+  </div>
+
+  <div class="card">
+    <h2>The Sandler Foundation</h2>
+    <p>Our client conversations are rooted in Sandler methodology. New hires don't need prior Sandler certification, but they will learn and practice these core concepts during ramp:</p>
+    <table>
+      <tr><th>Concept</th><th>What It Means for CSMs</th><th>When We Use It</th></tr>
+      <tr><td><strong>Up-Front Contract</strong></td><td>Set expectations at the start of every call: purpose, time, outcome, and permission to be direct</td><td>Every client call, QBR, check-in</td></tr>
+      <tr><td><strong>Pain Funnel</strong></td><td>Ask layered questions to uncover the real issue behind what the client says</td><td>Discovery, health checks, risk conversations</td></tr>
+      <tr><td><strong>Reversing</strong></td><td>Answer a question with a question to understand intent before committing</td><td>Pricing objections, competitor mentions, feature requests</td></tr>
+      <tr><td><strong>Negative Reverse</strong></td><td>Gently challenge assumptions to get honest answers</td><td>"Would it be a terrible idea if we explored..." style conversations</td></tr>
+      <tr><td><strong>No Mutual Mystification</strong></td><td>Never leave a call without both sides being clear on next steps</td><td>Every interaction, always</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== PHASE 1: FOUNDATION ==================== -->
+<div class="section" id="tr-phase1">
+  <div class="page-header">
+    <span class="phase-badge" style="background: var(--green-light); color: var(--green); border: 1px solid var(--green-border);">Phase 1 of 4</span>
+    <h1>Foundation</h1>
+    <p class="subtitle">Weeks 1 to 2 -- Learn the company, industry, tools, and team</p>
+  </div>
+
+  <div class="callout callout-green">
+    <div class="callout-label">Goal</div>
+    <div class="callout-body">By end of Week 2, the new CSM can explain Remote People's products, describe the EOR model to a client, navigate HubSpot confidently, and name every team member and their role.</div>
+  </div>
+
+  <!-- WEEK 1 -->
+  <div class="week-block">
+    <div class="week-header" style="background: var(--green-light);" onclick="toggleWeek(this)">
+      <div class="week-title">
+        <span>Week 1: Company &amp; Industry Immersion</span>
+      </div>
+      <span class="chevron">&#x25BC;</span>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-label">Day 1</div>
+        <div class="day-content">
+          <strong>Welcome &amp; Setup</strong><br>
+          IT setup: laptop, email, Slack, HubSpot access, Google Drive permissions. Meet Head of CS for program walkthrough. Receive training schedule and 90-day milestone document. Intro to buddy (assigned senior CSM). Team introductions via video call.
+        </div>
+        <div class="day-format">In-person / Video</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day 2</div>
+        <div class="day-content">
+          <strong>Remote People 101</strong><br>
+          Company history (Horizons to Remote People rebrand). Mission, vision, and values. Org chart: who does what across CS, Sales, Support, Operations, Legal. Product suite overview: EOR, Global Payroll, Entity Setup, Recruitment, Mobility, VAS. Watch 3 recorded client calls from different CSMs.
+        </div>
+        <div class="day-format">Self-paced + Video</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day 3</div>
+        <div class="day-content">
+          <strong>EOR Industry Deep Dive</strong><br>
+          What is an Employer of Record? How EOR works legally (co-employment model). Key compliance concepts: permanent establishment risk, misclassification, local labor law. Entity vs. EOR economics (when each makes sense). Market overview: $5 to 6B market, growth projections, where Remote People fits.
+        </div>
+        <div class="day-format">Session with Head of CS</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day 4</div>
+        <div class="day-content">
+          <strong>Competitive Landscape</strong><br>
+          Deep dive on top 5 competitors: Deel, Oyster HR, G-P, Papaya Global, Rippling. Strengths, vulnerabilities, positioning for each. How Remote People differentiates. Practice: "If a client says 'Deel is cheaper,' what do you say?" Discussion with buddy.
+        </div>
+        <div class="day-format">Self-paced + Buddy session</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day 5</div>
+        <div class="day-content">
+          <strong>Week 1 Check-in</strong><br>
+          30-minute debrief with Head of CS. Questions from the week. Quick knowledge check (verbal, not written): Can you explain EOR to a new client? Can you name 3 competitors and one differentiator for each? Review Week 2 schedule.
+        </div>
+        <div class="day-format">1:1 with Head of CS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="week-block">
+    <div class="week-header" style="background: var(--green-light);" onclick="toggleWeek(this)">
+      <div class="week-title">
+        <span>Week 2: Tools, Processes &amp; Personas</span>
+      </div>
+      <span class="chevron">&#x25BC;</span>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-label">Day 6</div>
+        <div class="day-content">
+          <strong>HubSpot Deep Dive</strong><br>
+          Account structure: how we organize clients, tiers, contacts. Health scores: how they're calculated, what each component means. Activity logging: meetings, emails, notes, tasks. Pipeline views: renewal dates, expansion opportunities. Practice: find 5 accounts, read their history, identify health status.
+        </div>
+        <div class="day-format">Hands-on workshop</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day 7</div>
+        <div class="day-content">
+          <strong>CS Playbooks &amp; Success Plays</strong><br>
+          Walk through all 8 lifecycle playbooks (CSM Playbooks 2026 doc). Walk through all trigger-based success plays (CS Success Plays 2026 doc). Understand when each playbook activates and what the first action is. Practice: given a scenario, identify which playbook to run.
+        </div>
+        <div class="day-format">Session with buddy</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day 8</div>
+        <div class="day-content">
+          <strong>Persona Mapping &amp; Communication</strong><br>
+          Review all 5 personas: CEO, CFO, CHRO, VP of People, VP of Sales/CRO. Pain points, motivations, and messaging for each. Communication style differences: how you talk to a CFO vs. a CHRO. Email writing workshop: write 3 different emails to 3 different personas for the same scenario.
+        </div>
+        <div class="day-format">Workshop + Practice</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day 9</div>
+        <div class="day-content">
+          <strong>Internal Processes</strong><br>
+          Sales-to-CS handoff: what you receive, what to check, what to push back on. Support escalation workflow: how tickets flow, when CSM gets involved. Invoicing and billing basics: who handles what, annual vs. monthly. Internal communication: Slack channels, weekly standup format, reporting cadence.
+        </div>
+        <div class="day-format">Cross-functional sessions</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day 10</div>
+        <div class="day-content">
+          <strong>Phase 1 Assessment</strong><br>
+          Written assessment: 20 questions covering EOR fundamentals, Remote People products, competitor positioning, persona messaging, and process knowledge. Passing score: 80%. Debrief with Head of CS. Review Phase 2 expectations. Buddy assignment confirmed for shadowing phase.
+        </div>
+        <div class="day-format">Assessment + 1:1</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PHASE 2: SHADOWING ==================== -->
+<div class="section" id="tr-phase2">
+  <div class="page-header">
+    <span class="phase-badge" style="background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border);">Phase 2 of 4</span>
+    <h1>Shadowing</h1>
+    <p class="subtitle">Weeks 3 to 4 -- Observe real client interactions, learn by watching</p>
+  </div>
+
+  <div class="callout callout-blue">
+    <div class="callout-label">Goal</div>
+    <div class="callout-body">By end of Week 4, the new CSM has observed 12+ client interactions across different types (check-ins, QBRs, escalations, onboarding), can identify Sandler techniques in real conversations, and has documented observations using the Shadowing Log.</div>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="week-block">
+    <div class="week-header" style="background: var(--blue-light);" onclick="toggleWeek(this)">
+      <div class="week-title">
+        <span>Week 3: Observe &amp; Document</span>
+      </div>
+      <span class="chevron">&#x25BC;</span>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-label">Mon</div>
+        <div class="day-content">
+          <strong>Shadowing Kickoff</strong><br>
+          Receive Shadowing Log template. Review what to watch for: how the CSM opens the call (up-front contract), how they ask questions (pain funnel), how they handle objections, how they close with next steps. Shadow buddy on 2 client calls.
+        </div>
+        <div class="day-format">Live observation</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Tue-Thu</div>
+        <div class="day-content">
+          <strong>Cross-CSM Shadowing</strong><br>
+          Shadow 2 to 3 different CSMs per day across different account types: Tier 1 strategic call, Tier 2 check-in, onboarding kickoff, QBR, support escalation meeting. Complete Shadowing Log after each call: what went well, what you'd do differently, questions for debrief.
+        </div>
+        <div class="day-format">Live observation</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Fri</div>
+        <div class="day-content">
+          <strong>Week 3 Debrief with Buddy</strong><br>
+          Review Shadowing Log together. Discuss patterns: what do the best calls have in common? Identify 3 techniques to practice. First role play: buddy plays client, new CSM runs a check-in call using up-front contract and open questions.
+        </div>
+        <div class="day-format">1:1 + Role play</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 4 -->
+  <div class="week-block">
+    <div class="week-header" style="background: var(--blue-light);" onclick="toggleWeek(this)">
+      <div class="week-title">
+        <span>Week 4: Targeted Observation &amp; First Attempts</span>
+      </div>
+      <span class="chevron">&#x25BC;</span>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-label">Mon-Tue</div>
+        <div class="day-content">
+          <strong>Targeted Shadowing</strong><br>
+          Focus on specific call types based on gaps identified in Week 3. Shadow at least 1 renewal conversation and 1 expansion conversation. Pay attention to how the CSM introduces commercial topics naturally.
+        </div>
+        <div class="day-format">Live observation</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Wed</div>
+        <div class="day-content">
+          <strong>Sandler Practice Session</strong><br>
+          90-minute role play workshop with buddy and 1 other CSM. Scenarios: client unhappy with support, client asks about pricing, client mentions competitor, new POC wants to understand what Remote People does. Practice up-front contracts, reversing, and pain funnel questions.
+        </div>
+        <div class="day-format">Role play workshop</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Thu</div>
+        <div class="day-content">
+          <strong>Account Prep Exercise</strong><br>
+          Assigned 3 accounts from buddy's book. Prepare for each: pull HubSpot data, review ticket history, identify health score, check renewal date, research POC on LinkedIn. Write a pre-call plan for each using the Pre-Call Planner framework.
+        </div>
+        <div class="day-format">Self-paced + Review</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Fri</div>
+        <div class="day-content">
+          <strong>Phase 2 Check-in</strong><br>
+          Review Shadowing Log (minimum 12 calls documented). Buddy evaluates role play performance. Head of CS debrief: ready for Phase 3? Discuss initial account assignments for guided practice.
+        </div>
+        <div class="day-format">1:1 with Head of CS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Shadowing Log Template</h2>
+    <p>Complete this for every call observed during Phase 2.</p>
+    <table>
+      <tr><th>Field</th><th>What to Capture</th></tr>
+      <tr><td><strong>Date / CSM / Client</strong></td><td>Basic info for reference</td></tr>
+      <tr><td><strong>Call Type</strong></td><td>Check-in, QBR, onboarding, escalation, renewal, expansion</td></tr>
+      <tr><td><strong>Account Tier</strong></td><td>Tier 1, 2, 3, or Reseller</td></tr>
+      <tr><td><strong>Up-Front Contract Used?</strong></td><td>Yes/No. If yes, what did they say?</td></tr>
+      <tr><td><strong>Key Questions Asked</strong></td><td>Best 2 to 3 questions the CSM asked</td></tr>
+      <tr><td><strong>Client Signals</strong></td><td>Expansion signals, risk signals, satisfaction indicators</td></tr>
+      <tr><td><strong>How They Closed</strong></td><td>Next steps, action items, follow-up committed</td></tr>
+      <tr><td><strong>What I'd Do Differently</strong></td><td>Your honest assessment (this is for learning, not criticism)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== PHASE 3: GUIDED PRACTICE ==================== -->
+<div class="section" id="tr-phase3">
+  <div class="page-header">
+    <span class="phase-badge" style="background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border);">Phase 3 of 4</span>
+    <h1>Guided Practice</h1>
+    <p class="subtitle">Weeks 5 to 8 -- Run client calls with buddy support, own first accounts</p>
+  </div>
+
+  <div class="callout callout-purple">
+    <div class="callout-label">Goal</div>
+    <div class="callout-body">By end of Week 8, the new CSM is running client calls independently (buddy on standby, not on the call), managing 5 to 8 accounts, and consistently using Sandler techniques. Call QA scores average 70+.</div>
+  </div>
+
+  <!-- WEEK 5-6 -->
+  <div class="week-block">
+    <div class="week-header" style="background: var(--purple-light);" onclick="toggleWeek(this)">
+      <div class="week-title">
+        <span>Weeks 5 to 6: Co-Pilot Mode</span>
+      </div>
+      <span class="chevron">&#x25BC;</span>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-label">Account Load</div>
+        <div class="day-content">
+          <strong>3 to 5 accounts assigned</strong><br>
+          Primarily Tier 2 and Tier 3 accounts (lower complexity, lower risk). Buddy remains on all calls as silent observer for the first week, then drops to being available on Slack.
+        </div>
+        <div class="day-format">Gradual handoff</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Weekly Rhythm</div>
+        <div class="day-content">
+          <strong>Monday:</strong> Pre-call prep for the week's meetings with buddy review<br>
+          <strong>Tue to Thu:</strong> Run 2 to 3 client calls per week. Buddy joins silently on first 2 calls, then is available via Slack<br>
+          <strong>Friday:</strong> Call review session with buddy. Review recordings, discuss what worked, identify improvements. Log in QA scorecard.
+        </div>
+        <div class="day-format">Structured week</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Focus Areas</div>
+        <div class="day-content">
+          <strong>Skill development priorities:</strong><br>
+          Opening calls with up-front contracts (should be automatic by end of Week 6)<br>
+          HubSpot hygiene: logging every interaction, updating health scores, setting follow-up tasks<br>
+          Email follow-ups within 24 hours of every call<br>
+          Identifying at least 1 playbook trigger per account
+        </div>
+        <div class="day-format">Ongoing practice</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 7-8 -->
+  <div class="week-block">
+    <div class="week-header" style="background: var(--purple-light);" onclick="toggleWeek(this)">
+      <div class="week-title">
+        <span>Weeks 7 to 8: Increasing Independence</span>
+      </div>
+      <span class="chevron">&#x25BC;</span>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-label">Account Load</div>
+        <div class="day-content">
+          <strong>5 to 8 accounts</strong><br>
+          Add 2 to 3 more accounts, including at least 1 Tier 1. Buddy no longer joins calls. New CSM runs all interactions independently with weekly review.
+        </div>
+        <div class="day-format">Independent management</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">New Skills</div>
+        <div class="day-content">
+          <strong>Commercial conversations:</strong> practice identifying and discussing expansion opportunities<br>
+          <strong>QBR preparation:</strong> prepare and present a mock QBR for the buddy and Head of CS<br>
+          <strong>Playbook execution:</strong> run at least 1 full playbook from trigger to completion (document the process)<br>
+          <strong>Escalation handling:</strong> practice escalating a mock at-risk account with risk brief
+        </div>
+        <div class="day-format">Skill building</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Week 8 Review</div>
+        <div class="day-content">
+          <strong>Mid-Ramp Assessment with Head of CS:</strong><br>
+          Review QA scores from call recordings (target: averaging 70+)<br>
+          Review HubSpot activity: are all accounts documented properly?<br>
+          Review email quality: are follow-ups timely and well-written?<br>
+          Discuss readiness for Phase 4 and full book assignment
+        </div>
+        <div class="day-format">1:1 with Head of CS</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PHASE 4: INDEPENDENCE ==================== -->
+<div class="section" id="tr-phase4">
+  <div class="page-header">
+    <span class="phase-badge" style="background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border);">Phase 4 of 4</span>
+    <h1>Independence</h1>
+    <p class="subtitle">Weeks 9 to 12 -- Full book, full ownership, certification</p>
+  </div>
+
+  <div class="callout callout-teal">
+    <div class="callout-label">Goal</div>
+    <div class="callout-body">By end of Week 12, the CSM manages their full book of business independently, has passed certification, and is operating at the same standard as the rest of the team. QA scores average 80+.</div>
+  </div>
+
+  <!-- WEEK 9-10 -->
+  <div class="week-block">
+    <div class="week-header" style="background: var(--teal-light);" onclick="toggleWeek(this)">
+      <div class="week-title">
+        <span>Weeks 9 to 10: Full Book Assignment</span>
+      </div>
+      <span class="chevron">&#x25BC;</span>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-label">Account Load</div>
+        <div class="day-content">
+          <strong>Full book assigned</strong> based on tier and capacity model:<br>
+          Tier 1: 8 to 12 accounts | Tier 2: 15 to 20 accounts | Tier 3: 30 to 50 accounts (tech-touch)<br>
+          Graduated handoff from departing CSM or redistribution from team. Full context transfer for every account.
+        </div>
+        <div class="day-format">Full ownership</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Expectations</div>
+        <div class="day-content">
+          Run all client calls independently. No buddy required.<br>
+          Complete HubSpot logging within 24 hours of every interaction.<br>
+          Activate playbooks when triggers are identified (documented in HubSpot).<br>
+          Participate in weekly team standup with account updates.<br>
+          Prepare and deliver at least 1 real QBR.
+        </div>
+        <div class="day-format">BAU operations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 11-12 -->
+  <div class="week-block">
+    <div class="week-header" style="background: var(--teal-light);" onclick="toggleWeek(this)">
+      <div class="week-title">
+        <span>Weeks 11 to 12: Certification Prep &amp; Assessment</span>
+      </div>
+      <span class="chevron">&#x25BC;</span>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-label">Week 11</div>
+        <div class="day-content">
+          <strong>Certification Prep:</strong><br>
+          Review all training materials, playbooks, and success plays.<br>
+          Complete any outstanding skill gaps identified during Phases 2 and 3.<br>
+          Prepare for live assessment: mock QBR, mock escalation, mock renewal conversation.<br>
+          Review QA scores from weeks 5 to 10 and identify improvement areas.
+        </div>
+        <div class="day-format">Self-paced prep</div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Week 12</div>
+        <div class="day-content">
+          <strong>Certification Day:</strong><br>
+          Part 1: Written assessment (EOR knowledge, process, tools) -- 80% passing score<br>
+          Part 2: Live role play with Head of CS playing difficult client scenarios<br>
+          Part 3: Account review -- present current book of business, health scores, risk accounts, expansion pipeline<br>
+          Part 4: QA score review -- average of 80+ across recorded calls from weeks 9 to 12
+        </div>
+        <div class="day-format">Assessment day</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MILESTONES ==================== -->
+<div class="section" id="tr-milestones">
+  <div class="page-header">
+    <h1>Milestones &amp; Checkpoints</h1>
+    <p class="subtitle">Clear gates that a new CSM must pass before advancing</p>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-icon" style="background: var(--green-light); color: var(--green);">W2</div>
+    <div class="milestone-content">
+      <h4>End of Week 2: Foundation Complete</h4>
+      <p>Pass written assessment (80%+). Can explain EOR model, name all products, describe 5 competitors, and navigate HubSpot.</p>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-icon" style="background: var(--blue-light); color: var(--blue);">W4</div>
+    <div class="milestone-content">
+      <h4>End of Week 4: Shadowing Complete</h4>
+      <p>12+ calls documented in Shadowing Log. Completed role play exercises. Buddy confirms readiness for guided practice.</p>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-icon" style="background: var(--purple-light); color: var(--purple);">W6</div>
+    <div class="milestone-content">
+      <h4>End of Week 6: First Calls Solo</h4>
+      <p>Run 4+ client calls without buddy on the call. Up-front contract used on every call. QA scores: 65+ average.</p>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-icon" style="background: var(--purple-light); color: var(--purple);">W8</div>
+    <div class="milestone-content">
+      <h4>End of Week 8: Mid-Ramp Assessment</h4>
+      <p>Managing 5 to 8 accounts. Mock QBR delivered. 1+ playbook executed end-to-end. QA scores: 70+ average. Head of CS sign-off for Phase 4.</p>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-icon" style="background: var(--teal-light); color: var(--teal);">W12</div>
+    <div class="milestone-content">
+      <h4>End of Week 12: Certification</h4>
+      <p>Full book managed independently. Written assessment passed (80%+). Live role play passed. Account review presented. QA scores: 80+ average. Officially certified.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-yellow">
+    <div class="callout-label">If a Milestone Is Missed</div>
+    <div class="callout-body">Missing a milestone doesn't mean failure. It means more support is needed. The Head of CS and buddy will create a 2-week remediation plan targeting the specific gap. The CSM repeats the assessment after the remediation period. Two consecutive missed milestones require a performance conversation.</div>
+  </div>
+</div>
+
+<!-- ==================== CERTIFICATION ==================== -->
+<div class="section" id="tr-certification">
+  <div class="page-header">
+    <h1>Certification Criteria</h1>
+    <p class="subtitle">What "fully ramped" means at Remote People</p>
+  </div>
+
+  <div class="card">
+    <h2>Certification Components</h2>
+    <table>
+      <tr><th>Component</th><th>Weight</th><th>Passing Standard</th><th>How It's Assessed</th></tr>
+      <tr><td><strong>Written Assessment</strong></td><td>20%</td><td>80% score</td><td>40-question test covering EOR, products, process, competitive, personas</td></tr>
+      <tr><td><strong>Live Role Play</strong></td><td>25%</td><td>Pass/Fail by Head of CS</td><td>3 scenarios: QBR, escalation, renewal. Evaluated on Sandler technique, empathy, commercial instinct</td></tr>
+      <tr><td><strong>Account Review</strong></td><td>25%</td><td>Clear, data-driven presentation</td><td>Present full book: health scores, risk accounts, expansion pipeline, upcoming renewals, actions planned</td></tr>
+      <tr><td><strong>QA Score Average</strong></td><td>30%</td><td>80+ average (weeks 9-12)</td><td>Based on QA scorecard applied to recorded client calls</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>QA Scorecard Categories</h2>
+    <p>Every recorded call is scored on these dimensions (1 to 5 scale each):</p>
+    <table>
+      <tr><th>Category</th><th>What We Evaluate</th></tr>
+      <tr><td><strong>Call Opening</strong></td><td>Up-front contract set? Agenda stated? Time confirmed? Permission to be direct?</td></tr>
+      <tr><td><strong>Discovery &amp; Listening</strong></td><td>Open questions asked? Pain funnel used? Active listening demonstrated? Client talked more than CSM?</td></tr>
+      <tr><td><strong>EOR Knowledge</strong></td><td>Compliance concepts accurate? Product knowledge demonstrated? Country-specific awareness?</td></tr>
+      <tr><td><strong>Commercial Awareness</strong></td><td>Expansion signals identified? Upsell/cross-sell raised naturally? Value articulated?</td></tr>
+      <tr><td><strong>Objection Handling</strong></td><td>Reversing used? Stayed calm under pressure? Addressed root concern, not surface complaint?</td></tr>
+      <tr><td><strong>Call Close</strong></td><td>Clear next steps? Action items assigned? Follow-up timeline committed? No mutual mystification?</td></tr>
+      <tr><td><strong>Post-Call</strong></td><td>HubSpot logged within 24h? Follow-up email sent within 24h? Quality of notes?</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== WEEKLY TRAINING CALENDAR ==================== -->
+<div class="section" id="tr-weekly-calendar">
+  <div class="page-header">
+    <h1>Weekly Training Calendar</h1>
+    <p class="subtitle">Ongoing enablement for the entire CS team -- every week, all year</p>
+  </div>
+
+  <div class="callout callout-blue">
+    <div class="callout-label">Format</div>
+    <div class="callout-body">One 60-minute session per week, rotating through 4 training themes on a monthly cycle. Sessions are recorded for team members in different time zones. Every session has a hands-on component -- no passive lectures.</div>
+  </div>
+
+  <div class="card">
+    <h2>Monthly Rotation</h2>
+    <table>
+      <tr><th>Week</th><th>Theme</th><th>Format</th><th>Led By</th></tr>
+      <tr><td><span class="tag tag-blue">Week 1</span></td><td><strong>Call Review &amp; Coaching</strong></td><td>Listen to 2 recorded calls as a team. Score on QA scorecard. Discuss what worked, what to improve. Specific, actionable feedback.</td><td>Head of CS</td></tr>
+      <tr><td><span class="tag tag-purple">Week 2</span></td><td><strong>Skill Building</strong></td><td>Deep dive on one skill: Sandler technique, objection handling, QBR delivery, commercial conversations, email writing, escalation management. Includes role play practice.</td><td>Rotating CSM lead</td></tr>
+      <tr><td><span class="tag tag-teal">Week 3</span></td><td><strong>EOR &amp; Industry Knowledge</strong></td><td>Country deep dives, compliance updates, new regulations, product changes, competitive intelligence. Guest speakers from Legal, Operations, or Product.</td><td>Head of CS + Guest</td></tr>
+      <tr><td><span class="tag tag-green">Week 4</span></td><td><strong>Account Strategy &amp; Wins</strong></td><td>Team shares wins, war stories, and tough situations. One CSM presents a complex account strategy. Peer coaching and brainstorming.</td><td>Rotating CSM lead</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Full Year Training Topics</h2>
+    <p>Below is the 12-month topic rotation. Each topic appears in its designated weekly slot. Topics can be adjusted based on team needs, competitive developments, or business priorities.</p>
+
+    <h3>Week 1 Sessions: Call Review &amp; Coaching</h3>
+    <table>
+      <tr><th>Month</th><th>Focus</th></tr>
+      <tr><td>Jan</td><td>New year kickoff: review holiday-period calls, re-establish call quality baseline</td></tr>
+      <tr><td>Feb</td><td>Check-in call excellence: are we opening and closing calls properly?</td></tr>
+      <tr><td>Mar</td><td>Renewal conversations: review 2 renewal calls, score commercial technique</td></tr>
+      <tr><td>Apr</td><td>Escalation handling: review calls where clients were frustrated</td></tr>
+      <tr><td>May</td><td>QBR delivery: review 1 recorded QBR end to end, score structure and content</td></tr>
+      <tr><td>Jun</td><td>Mid-year calibration: review top-scoring and lowest-scoring calls from H1</td></tr>
+      <tr><td>Jul</td><td>New POC conversations: how do we onboard new decision-makers?</td></tr>
+      <tr><td>Aug</td><td>Expansion conversations: review calls where upsell was introduced</td></tr>
+      <tr><td>Sep</td><td>At-risk account calls: review calls with Yellow and Red health accounts</td></tr>
+      <tr><td>Oct</td><td>Competitive response: review calls where competitor was mentioned</td></tr>
+      <tr><td>Nov</td><td>Year-end prep: review calls focused on annual planning with clients</td></tr>
+      <tr><td>Dec</td><td>Year in review: best call of the year, lessons learned, celebrate growth</td></tr>
+    </table>
+
+    <h3>Week 2 Sessions: Skill Building</h3>
+    <table>
+      <tr><th>Month</th><th>Skill Focus</th><th>Practice Exercise</th></tr>
+      <tr><td>Jan</td><td>Sandler refresher: up-front contracts and pain funnel</td><td>Paired role plays with new scenarios</td></tr>
+      <tr><td>Feb</td><td>Email writing: follow-ups, check-ins, and bad news delivery</td><td>Write and peer-review 3 emails live</td></tr>
+      <tr><td>Mar</td><td>Pricing and ROI conversations</td><td>Role play: CFO pushes back on pricing, defend with TCO math</td></tr>
+      <tr><td>Apr</td><td>Difficult conversations: delivering bad news, saying no</td><td>Role play: telling a client about a compliance issue</td></tr>
+      <tr><td>May</td><td>QBR preparation and delivery workshop</td><td>Each CSM presents a 10-min mock QBR</td></tr>
+      <tr><td>Jun</td><td>Multi-threading: building relationships beyond the POC</td><td>Account mapping exercise for 2 real accounts</td></tr>
+      <tr><td>Jul</td><td>Sandler advanced: negative reverse selling and reversing</td><td>Role play: client says "we're happy, no changes needed"</td></tr>
+      <tr><td>Aug</td><td>Storytelling with data: making numbers meaningful</td><td>Build a one-slide value summary for a real account</td></tr>
+      <tr><td>Sep</td><td>Renewal negotiation techniques</td><td>Role play: client wants a discount, protect the deal</td></tr>
+      <tr><td>Oct</td><td>Cross-sell and upsell: introducing products naturally</td><td>Practice introducing Global Payroll and Recruitment Services</td></tr>
+      <tr><td>Nov</td><td>Stakeholder management: managing up, across, and down</td><td>Case study: navigate a complex internal stakeholder map</td></tr>
+      <tr><td>Dec</td><td>Personal development: set learning goals for next year</td><td>Individual development plan creation</td></tr>
+    </table>
+
+    <h3>Week 3 Sessions: EOR &amp; Industry Knowledge</h3>
+    <table>
+      <tr><th>Month</th><th>Topic</th><th>Guest Speaker</th></tr>
+      <tr><td>Jan</td><td>2026 EOR market trends and competitive landscape update</td><td>Head of CS</td></tr>
+      <tr><td>Feb</td><td>Country deep dive: LATAM (Brazil, Mexico, Colombia, Argentina)</td><td>Operations / Legal</td></tr>
+      <tr><td>Mar</td><td>Compliance fundamentals refresher: PE risk, misclassification, labor law</td><td>Legal team</td></tr>
+      <tr><td>Apr</td><td>Country deep dive: Europe (UK, Germany, France, Spain, Netherlands)</td><td>Operations / Legal</td></tr>
+      <tr><td>May</td><td>Entity vs. EOR economics: when to recommend entity setup</td><td>Finance / Operations</td></tr>
+      <tr><td>Jun</td><td>Country deep dive: APAC (India, Philippines, Singapore, Australia)</td><td>Operations / Legal</td></tr>
+      <tr><td>Jul</td><td>Product update: new features, platform improvements, roadmap preview</td><td>Product team</td></tr>
+      <tr><td>Aug</td><td>Country deep dive: Middle East and Africa (UAE, South Africa, Nigeria)</td><td>Operations / Legal</td></tr>
+      <tr><td>Sep</td><td>Competitive intelligence: Deel, Oyster, G-P quarterly update</td><td>Head of CS + Sales</td></tr>
+      <tr><td>Oct</td><td>Global payroll deep dive: how it works, common issues, selling points</td><td>Payroll operations</td></tr>
+      <tr><td>Nov</td><td>Regulatory changes: year-end compliance updates for key countries</td><td>Legal team</td></tr>
+      <tr><td>Dec</td><td>2027 planning: industry predictions, team strategy, product roadmap</td><td>Head of CS + Leadership</td></tr>
+    </table>
+
+    <h3>Week 4 Sessions: Account Strategy &amp; Wins</h3>
+    <table>
+      <tr><th>Month</th><th>Format</th></tr>
+      <tr><td>Jan</td><td>Q1 goal setting: each CSM presents their top 3 accounts to grow and top 3 risks to manage</td></tr>
+      <tr><td>Feb</td><td>Win spotlight: 2 CSMs share a recent win (expansion, save, advocacy). Team discusses what made it work.</td></tr>
+      <tr><td>Mar</td><td>Complex account workshop: 1 CSM presents a difficult account, team brainstorms strategy</td></tr>
+      <tr><td>Apr</td><td>Q1 retrospective: review team metrics, celebrate wins, identify patterns in churn or risk</td></tr>
+      <tr><td>May</td><td>Expansion pipeline review: each CSM shares their top expansion opportunities</td></tr>
+      <tr><td>Jun</td><td>War story session: share the hardest client situation this quarter and what you learned</td></tr>
+      <tr><td>Jul</td><td>Q2 retrospective: review team metrics, H1 performance, adjust strategy for H2</td></tr>
+      <tr><td>Aug</td><td>Renewal prep workshop: review all Q4 renewals as a team, assign strategies</td></tr>
+      <tr><td>Sep</td><td>Peer coaching: pair up, review each other's accounts, give honest feedback</td></tr>
+      <tr><td>Oct</td><td>Q3 retrospective: review metrics, identify end-of-year priorities</td></tr>
+      <tr><td>Nov</td><td>Client appreciation planning: discuss year-end outreach, holiday messaging, advocacy asks</td></tr>
+      <tr><td>Dec</td><td>Year in review: team achievements, individual highlights, set the tone for next year</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Session Rules</h2>
+    <ul>
+      <li><strong>Camera on.</strong> Training is interactive. If you can't be present, watch the recording and submit written reflections.</li>
+      <li><strong>No spectators.</strong> Every session requires participation: role play, share a perspective, ask a question, present something.</li>
+      <li><strong>Record everything.</strong> All sessions recorded and stored in Google Drive for async access across time zones.</li>
+      <li><strong>Rotate leaders.</strong> Week 2 and Week 4 sessions are led by different CSMs each month. This builds leadership skills and keeps content fresh.</li>
+      <li><strong>Action items.</strong> Every session ends with 1 to 2 takeaways each person commits to applying that week.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== QUARTERLY DEEP DIVES ==================== -->
+<div class="section" id="tr-quarterly">
+  <div class="page-header">
+    <h1>Quarterly Deep Dives</h1>
+    <p class="subtitle">Extended 2 to 3 hour sessions for strategic development</p>
+  </div>
+
+  <div class="card">
+    <h2>Quarterly Schedule</h2>
+    <p>In addition to weekly sessions, the team holds one extended training session per quarter. These are deeper, more strategic, and often include cross-functional guests.</p>
+    <table>
+      <tr><th>Quarter</th><th>Theme</th><th>Duration</th><th>Description</th></tr>
+      <tr><td><strong>Q1</strong></td><td>Annual Kickoff &amp; Strategy</td><td>3 hours</td><td>Team goals, individual OKRs, product roadmap preview, competitive landscape update, playbook review and updates. Set the tone for the year.</td></tr>
+      <tr><td><strong>Q2</strong></td><td>Commercial Excellence Workshop</td><td>2.5 hours</td><td>Expansion strategy, pricing objection handling, cross-sell techniques. Includes live role plays scored by Head of CS. Individual coaching plans created.</td></tr>
+      <tr><td><strong>Q3</strong></td><td>Mid-Year Performance &amp; Skill Audit</td><td>2 hours</td><td>Review H1 QA scores, identify team-wide skill gaps, update training focus for H2. Each CSM presents their top achievement and biggest learning.</td></tr>
+      <tr><td><strong>Q4</strong></td><td>Renewal Blitz &amp; Year Planning</td><td>2.5 hours</td><td>Review all Q1 renewals as a team. Assign strategies for at-risk accounts. Discuss year-end client outreach. Begin 2027 planning.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== TRAINING RESOURCES ==================== -->
+<div class="section" id="tr-resources">
+  <div class="page-header">
+    <h1>Training Resources</h1>
+    <p class="subtitle">Everything a CSM needs in one place</p>
+  </div>
+
+  <div class="card">
+    <h2>Core Documents</h2>
+    <table>
+      <tr><th>Resource</th><th>What It Is</th><th>When to Use</th></tr>
+      <tr><td><strong>CSM Playbooks 2026</strong></td><td>8 lifecycle playbooks with step-by-step protocols, metrics, and escalation paths</td><td>When a playbook trigger activates (dark account, renewal, escalation, etc.)</td></tr>
+      <tr><td><strong>CS Success Plays 2026</strong></td><td>Trigger-based plays with messaging templates for growth, risk, and lifecycle events</td><td>Daily: when signals appear in HubSpot, LinkedIn, or conversation</td></tr>
+      <tr><td><strong>QA Scorecard</strong></td><td>7-dimension call scoring framework</td><td>Weekly: during call review sessions and self-assessment</td></tr>
+      <tr><td><strong>Shadowing Log</strong></td><td>Observation template for new hire shadowing</td><td>Phase 2 of new hire ramp</td></tr>
+      <tr><td><strong>Pre-Call Planner</strong></td><td>Sandler-influenced call preparation framework</td><td>Before every client call</td></tr>
+      <tr><td><strong>Persona Mapping Guide</strong></td><td>Stakeholder profiles with motivations, pain points, and messaging</td><td>Before client calls, when tailoring outreach</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Recommended External Learning</h2>
+    <table>
+      <tr><th>Resource</th><th>Type</th><th>Why It's Useful</th></tr>
+      <tr><td><strong>Sandler Training Online</strong></td><td>Course</td><td>Structured methodology training with certification</td></tr>
+      <tr><td><strong>GainGrow podcast</strong></td><td>Podcast</td><td>Customer Success leadership perspectives and frameworks</td></tr>
+      <tr><td><strong>The Challenger Customer</strong> (Brent Adamson)</td><td>Book</td><td>Selling to complex buying groups and building commercial relationships</td></tr>
+      <tr><td><strong>Never Split the Difference</strong> (Chris Voss)</td><td>Book</td><td>Negotiation techniques applicable to renewals and pricing conversations</td></tr>
+      <tr><td><strong>Gainsight Pulse Library</strong></td><td>Videos</td><td>CS industry best practices and thought leadership</td></tr>
+      <tr><td><strong>EOR industry reports</strong> (Everest Group, NelsonHall)</td><td>Research</td><td>Market data and trends for client conversations</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== MANAGER'S GUIDE ==================== -->
+<div class="section" id="tr-manager-guide">
+  <div class="page-header">
+    <h1>Manager's Guide</h1>
+    <p class="subtitle">How to run the program and support your team's growth</p>
+  </div>
+
+  <div class="card">
+    <h2>New Hire Checklist for Managers</h2>
+    <p>Complete these before the new CSM's first day:</p>
+    <ul class="checklist">
+      <li>IT setup request submitted (laptop, email, Slack, HubSpot, Google Drive)</li>
+      <li>Buddy assigned (senior CSM with capacity, good coaching instincts)</li>
+      <li>Training schedule sent to new hire</li>
+      <li>90-day milestone document prepared and personalized</li>
+      <li>First 5 shadowing calls identified on buddy's calendar</li>
+      <li>Initial account assignments identified for Phase 3 (3 to 5 low-risk accounts)</li>
+      <li>Welcome message posted in team Slack channel</li>
+      <li>Week 1 and Week 2 calendar blocks set (daily sessions)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Coaching Rhythm</h2>
+    <table>
+      <tr><th>Cadence</th><th>Activity</th><th>Duration</th></tr>
+      <tr><td><strong>Daily (Weeks 1-2)</strong></td><td>End-of-day check-in: what did you learn today? What questions do you have?</td><td>15 min</td></tr>
+      <tr><td><strong>Weekly (Weeks 3-8)</strong></td><td>1:1 coaching session: review calls, discuss accounts, address skill gaps</td><td>30 min</td></tr>
+      <tr><td><strong>Bi-weekly (Weeks 9-12)</strong></td><td>1:1 coaching session: account strategy, certification prep, performance feedback</td><td>30 min</td></tr>
+      <tr><td><strong>Monthly (Post-ramp)</strong></td><td>1:1 development conversation: career growth, skill priorities, feedback exchange</td><td>45 min</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Common Ramp Challenges &amp; Solutions</h2>
+    <table>
+      <tr><th>Challenge</th><th>Signs</th><th>Solution</th></tr>
+      <tr><td><strong>Information overload</strong></td><td>New hire seems overwhelmed, can't retain key concepts</td><td>Slow down. Focus on 1 to 2 concepts per day. Use spaced repetition: revisit topics on Day 3 and Day 7.</td></tr>
+      <tr><td><strong>Call anxiety</strong></td><td>Avoiding calls, over-preparing, freezing on live calls</td><td>More role plays with buddy in low-stakes settings. Start with Tier 3 accounts. Normalize imperfection.</td></tr>
+      <tr><td><strong>HubSpot resistance</strong></td><td>Logs are late, incomplete, or missing</td><td>Make it part of the daily routine, not a chore. Show how good logging helps them (renewal prep, QBR data). Check daily during Weeks 3 to 6.</td></tr>
+      <tr><td><strong>Commercial discomfort</strong></td><td>Avoids mentioning products, pricing, or expansion</td><td>Reframe: commercial conversations are about solving problems, not selling. Practice with buddy until it feels natural.</td></tr>
+      <tr><td><strong>Slow integration</strong></td><td>Not participating in team discussions, isolated</td><td>Buddy should actively include them. Assign a Week 4 session to co-lead. Make them present a win early.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Buddy Selection Criteria</h2>
+    <p>Not every senior CSM is a good buddy. Select based on:</p>
+    <ul>
+      <li><strong>Patience:</strong> willing to answer the same question multiple times without frustration</li>
+      <li><strong>Call quality:</strong> consistently scores 85+ on QA scorecard (they model the right behaviors)</li>
+      <li><strong>Availability:</strong> has time in their schedule (not managing 20+ Tier 1 accounts at the same time)</li>
+      <li><strong>Communication:</strong> gives specific, constructive feedback, not just "that was good"</li>
+      <li><strong>Enthusiasm:</strong> genuinely wants to help someone grow (this can't be forced)</li>
+    </ul>
+
+    <div class="callout callout-yellow">
+      <div class="callout-label">Time Investment</div>
+      <div class="callout-body">Being a buddy takes approximately 5 to 8 hours per week during Weeks 1 to 4, dropping to 2 to 3 hours per week during Weeks 5 to 8. Factor this into the buddy's account load and expectations. Recognize and reward great buddies -- it's one of the most impactful things a CSM can do for the team.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== QA FRAMEWORK ==================== -->
+<div class="section" id="tr-qa-framework">
+  <div class="page-header">
+    <h1>QA &amp; Assessment Framework</h1>
+    <p class="subtitle">How we measure and improve call quality across the team</p>
+  </div>
+
+  <div class="card">
+    <h2>QA Scorecard (Detailed)</h2>
+    <p>Each dimension is scored 1 to 5. Total possible score: 35. Percentage calculated against total. Target for ramped CSMs: 80%+ (28+/35).</p>
+
+    <table>
+      <tr><th>Dimension</th><th>1 (Needs Work)</th><th>3 (Meets Standard)</th><th>5 (Exceptional)</th></tr>
+      <tr>
+        <td><strong>Call Opening</strong></td>
+        <td>No agenda set. Jumped straight into content. No time check.</td>
+        <td>Up-front contract used. Agenda stated. Time confirmed.</td>
+        <td>Up-front contract feels natural. Permission to be direct granted. Client co-owns the agenda.</td>
+      </tr>
+      <tr>
+        <td><strong>Discovery</strong></td>
+        <td>Mostly closed questions. CSM talked more than client. Surface-level.</td>
+        <td>Open questions used. Client shared meaningful information. Some follow-up depth.</td>
+        <td>Pain funnel deployed. Multiple layers of "tell me more." Client shared something they hadn't planned to.</td>
+      </tr>
+      <tr>
+        <td><strong>EOR Knowledge</strong></td>
+        <td>Inaccurate information shared. Couldn't answer basic compliance questions.</td>
+        <td>Accurate product and compliance information. Handled questions confidently.</td>
+        <td>Proactively shared country-specific insights. Connected compliance to business impact. Client learned something new.</td>
+      </tr>
+      <tr>
+        <td><strong>Commercial Awareness</strong></td>
+        <td>No expansion signals identified. No products mentioned. Purely relational call.</td>
+        <td>Identified at least 1 signal. Raised a product or service naturally.</td>
+        <td>Connected client's business goals to specific expansion opportunity. Created urgency without pressure.</td>
+      </tr>
+      <tr>
+        <td><strong>Objection Handling</strong></td>
+        <td>Got defensive. Caved immediately. Made promises without authority.</td>
+        <td>Stayed calm. Used reversing. Addressed the concern without over-committing.</td>
+        <td>Turned the objection into a deeper conversation. Client felt heard AND moved forward.</td>
+      </tr>
+      <tr>
+        <td><strong>Call Close</strong></td>
+        <td>Call ended without clear next steps. "Let's reconnect sometime."</td>
+        <td>Next steps stated. Follow-up date set. Action items assigned.</td>
+        <td>Mutual commitments confirmed. Client and CSM both have deliverables. Energy and trust increased.</td>
+      </tr>
+      <tr>
+        <td><strong>Post-Call</strong></td>
+        <td>No HubSpot log. No follow-up email. Notes are vague or missing.</td>
+        <td>HubSpot logged within 24h. Follow-up email sent. Notes are clear and actionable.</td>
+        <td>Detailed notes with next steps, signals, and sentiment captured. Follow-up email is personalized and value-adding.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Assessment Cadence</h2>
+    <table>
+      <tr><th>Who</th><th>Frequency</th><th>Calls Reviewed</th><th>Reviewed By</th></tr>
+      <tr><td><strong>New hires (Phase 3-4)</strong></td><td>Weekly</td><td>2 calls per week</td><td>Buddy + Head of CS</td></tr>
+      <tr><td><strong>Ramped CSMs</strong></td><td>Bi-weekly</td><td>1 call per cycle</td><td>Head of CS or CS Lead</td></tr>
+      <tr><td><strong>Team-wide</strong></td><td>Monthly (Week 1 session)</td><td>2 calls reviewed as a group</td><td>Full team</td></tr>
+    </table>
+
+    <div class="callout callout-green">
+      <div class="callout-label">Important</div>
+      <div class="callout-body">QA is a coaching tool, not a punishment tool. The goal is growth, not gotcha. Scores are shared privately with the CSM first, then discussed in 1:1. Team-wide reviews use anonymized calls unless the CSM volunteers to share. Celebrate improvement as much as high scores.</div>
+    </div>
+  </div>
+</div>
+
+
 </div><!-- /main-content -->
 </div><!-- /page-wrapper -->
 
 <script>
-function showSection(sectionId) {
-  // Hide all sections
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  // Show target
-  const target = document.getElementById(sectionId);
+function showSection(sectionId, navEl) {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  var target = document.getElementById(sectionId);
   if (target) target.classList.add('active');
 
-  // Update nav
-  document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(function(link) { link.classList.remove('active'); });
+  if (navEl) navEl.classList.add('active');
 
-  // Scroll to top of main content
-  document.querySelector('.main-content').scrollTo(0, 0);
-  window.scrollTo(0, 0);
+  document.getElementById('mainContent').scrollTop = 0;
+
+  // Close mobile menu if open
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  if (sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+}
+
+function toggleMobileMenu() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+
+function toggleWeek(header) {
+  header.classList.toggle('open');
+  var body = header.nextElementSibling;
+  body.classList.toggle('open');
 }
 
 function copyTemplate(btn) {
-  const template = btn.parentElement;
-  const clone = template.cloneNode(true);
-  // Remove the copy button from clone
-  const cloneBtn = clone.querySelector('.copy-btn');
+  var template = btn.parentElement;
+  var clone = template.cloneNode(true);
+  var cloneBtn = clone.querySelector('.copy-btn');
   if (cloneBtn) cloneBtn.remove();
-  // Remove strong tags but keep text
-  clone.querySelectorAll('strong').forEach(s => {
-    s.replaceWith(s.textContent);
-  });
-  // Get text content, replacing <br> with newlines
-  let html = clone.innerHTML;
+  clone.querySelectorAll('strong').forEach(function(s) { s.replaceWith(s.textContent); });
+  var html = clone.innerHTML;
   html = html.replace(/<br\s*\/?>/gi, '\n');
-  const text = html.replace(/<[^>]*>/g, '').trim();
+  var text = html.replace(/<[^>]*>/g, '').trim();
 
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(text).then(function() {
     btn.textContent = 'Copied!';
     btn.style.color = '#059669';
-    setTimeout(() => {
+    setTimeout(function() {
       btn.textContent = 'Copy';
       btn.style.color = '';
     }, 1500);
